@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nails at Dadeland — Premier Nail Studio, Miami</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #FDF6F0;
+      --rose-gold:   #C4956A;
+      --rose-dark:   #A87850;
+      --deep:        #2A1A1A;
+      --blush:       #F2D2C8;
+      --blush-mid:   #E8B8A8;
+      --text:        #3D2B1F;
+      --text-muted:  #8A7068;
+      --gold-light:  #EDD5B3;
+      --mauve:       #C9A09A;
+      --border:      rgba(196,149,106,.22);
+      --border-soft: rgba(196,149,106,.12);
+      --glass-bg:    rgba(253,246,240,.82);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CURSOR ────────────────────────────── */
+    #cursor {
+      position: fixed; width: 9px; height: 9px;
+      background: var(--rose-gold); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .2s, height .2s;
+    }
+    #cursor-ring {
+      position: fixed; width: 34px; height: 34px;
+      border: 1.5px solid rgba(196,149,106,.5); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: width .3s, height .3s, border-color .3s;
+    }
+    a, button { cursor: none; }
+
+    /* ─── NAV ───────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      transition: padding .3s, background .3s;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem; font-weight: 600;
+      letter-spacing: .04em; color: var(--deep);
+      text-decoration: none; line-height: 1.1;
+    }
+    .nav-logo span {
+      display: block; font-size: .56rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--rose-gold); margin-top: 2px;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none;
+      font-size: .82rem; font-weight: 500; letter-spacing: .04em;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--rose-gold) !important; color: #fff !important;
+      padding: .55rem 1.5rem; border-radius: 100px;
+      font-weight: 600 !important; letter-spacing: .04em;
+      transition: background .2s, transform .2s !important;
+    }
+    .nav-cta:hover { background: var(--rose-dark) !important; transform: translateY(-1px); }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+    .mobile-menu {
+      display: none; position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--cream); z-index: 490;
+      flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 500;
+      color: var(--text); text-decoration: none; letter-spacing: .02em;
+    }
+    .mobile-menu a.m-cta {
+      font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      background: var(--rose-gold); color: #fff;
+      padding: .75rem 2.5rem; border-radius: 100px; font-weight: 600;
+    }
+
+    /* ─── HERO ──────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 9rem 2rem 6rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('images/nails/hero-nails.jpeg');
+      background-size: cover; background-position: center;
+      z-index: 0;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(253,246,240,.72) 0%, rgba(253,246,240,.55) 50%, rgba(253,246,240,.82) 100%),
+        linear-gradient(135deg, rgba(242,210,200,.4) 0%, transparent 60%);
+    }
+    .hero > * { position: relative; z-index: 2; }
+
+    /* Floating blobs (CSS only, no emojis) */
+    .deco {
+      position: absolute; border-radius: 50%;
+      pointer-events: none; z-index: 1;
+    }
+    .deco-1 {
+      width: 420px; height: 420px; top: -100px; right: -120px;
+      background: radial-gradient(circle, rgba(242,210,200,.35) 0%, transparent 70%);
+      animation: floatA 12s ease-in-out infinite;
+    }
+    .deco-2 {
+      width: 280px; height: 280px; bottom: 80px; left: -60px;
+      background: radial-gradient(circle, rgba(237,213,179,.4) 0%, transparent 70%);
+      animation: floatB 9s ease-in-out infinite;
+    }
+    @keyframes floatA {
+      0%,100% { transform: translate(0,0); }
+      50% { transform: translate(18px,-22px); }
+    }
+    @keyframes floatB {
+      0%,100% { transform: translate(0,0); }
+      50% { transform: translate(14px,-18px); }
+    }
+
+    .hero-eyebrow {
+      font-size: .68rem; font-weight: 600;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--rose-gold); margin-bottom: 1.5rem;
+      display: flex; align-items: center; justify-content: center; gap: .6rem;
+    }
+    .pulse-dot {
+      width: 6px; height: 6px; background: var(--rose-gold); border-radius: 50%;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .35; transform: scale(.7); }
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.4rem, 8vw, 8.5rem);
+      font-weight: 600; line-height: .93;
+      letter-spacing: -.02em; color: var(--deep); margin-bottom: 1.8rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--rose-gold); }
+
+    .hero-sub {
+      font-size: 1.05rem; color: var(--text-muted);
+      max-width: 480px; margin: 0 auto 2.8rem;
+      line-height: 1.75; font-weight: 400;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn-solid {
+      background: var(--rose-gold); color: #fff;
+      padding: .9rem 2.4rem; font-weight: 600; font-size: .88rem;
+      border-radius: 100px; text-decoration: none; letter-spacing: .04em;
+      transition: background .25s, transform .2s, box-shadow .25s;
+      box-shadow: 0 8px 32px rgba(196,149,106,.28);
+    }
+    .btn-solid:hover { background: var(--rose-dark); transform: translateY(-2px); box-shadow: 0 14px 40px rgba(196,149,106,.38); }
+
+    .btn-outline {
+      background: rgba(253,246,240,.7); color: var(--text);
+      border: 1.5px solid var(--border);
+      padding: .9rem 2.4rem; font-weight: 600; font-size: .88rem;
+      border-radius: 100px; text-decoration: none; letter-spacing: .04em;
+      backdrop-filter: blur(8px);
+      transition: border-color .25s, color .25s, transform .2s;
+    }
+    .btn-outline:hover { border-color: var(--rose-gold); color: var(--rose-gold); transform: translateY(-2px); }
+
+    .scroll-hint {
+      position: absolute; bottom: 2.2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .4rem;
+      font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--rose-gold); opacity: .65; z-index: 2;
+    }
+    .scroll-line {
+      width: 1px; height: 42px;
+      background: linear-gradient(to bottom, var(--rose-gold), transparent);
+      animation: scrollDrop 2s ease-in-out infinite;
+    }
+    @keyframes scrollDrop {
+      0%,100% { opacity: .65; transform: scaleY(1); }
+      50% { opacity: .2; transform: scaleY(.6); }
+    }
+
+    /* ─── MARQUEE ───────────────────────────── */
+    .marquee-wrap {
+      overflow: hidden; padding: .9rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--blush);
+    }
+    .marquee-track {
+      display: flex; white-space: nowrap; width: max-content;
+      animation: marqLeft 32s linear infinite;
+    }
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: 1rem; padding: 0 1.6rem;
+      font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--text);
+    }
+    .mdot { width: 4px; height: 4px; background: var(--rose-gold); border-radius: 50%; flex-shrink: 0; }
+    @keyframes marqLeft {
+      0% { transform: translateX(0); } 100% { transform: translateX(-50%); }
+    }
+
+    /* ─── SERVICES ──────────────────────────── */
+    #services { padding: 8rem 3rem; background: var(--cream); }
+
+    .section-label {
+      font-size: .63rem; font-weight: 600; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--rose-gold); margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4.5rem); font-weight: 600;
+      letter-spacing: -.02em; line-height: .95; color: var(--deep); margin-bottom: 1rem;
+    }
+    .section-title em { font-style: italic; color: var(--rose-gold); }
+    .section-sub { font-size: .95rem; color: var(--text-muted); max-width: 420px; line-height: 1.75; }
+
+    .services-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      max-width: 1100px; margin: 0 auto 3.5rem; gap: 2rem; flex-wrap: wrap;
+    }
+
+    /* Bento */
+    .bento {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem;
+    }
+    .bento-card {
+      background: #fff; border: 1px solid var(--border-soft); border-radius: 20px;
+      display: flex; flex-direction: column;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      overflow: hidden;
+    }
+    .bento-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(196,149,106,.12); border-color: var(--border); }
+
+    .bento-photo {
+      width: 100%; height: 200px; object-fit: cover;
+      display: block; transition: transform .6s ease;
+    }
+    .bento-card:hover .bento-photo { transform: scale(1.04); }
+
+    .bento-body { padding: 1.75rem; display: flex; flex-direction: column; gap: .45rem; flex: 1; }
+
+    .bento-card.featured { background: var(--deep); border-color: transparent; }
+    .bento-card.featured .bento-body { background: var(--deep); }
+
+    .bento-card.wide {
+      grid-column: span 2; flex-direction: row;
+    }
+    .bento-card.wide .bento-photo {
+      width: 45%; height: 100%; min-height: 260px; border-radius: 0;
+      flex-shrink: 0;
+    }
+    .bento-card.wide .bento-body { justify-content: center; padding: 2rem 2rem 2rem 2rem; }
+
+    .bento-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600; color: var(--deep); letter-spacing: -.01em;
+    }
+    .bento-card.featured .bento-name { color: #fff; }
+
+    .bento-price { font-size: .76rem; font-weight: 600; color: var(--rose-gold); letter-spacing: .08em; }
+    .bento-card.featured .bento-price { color: var(--gold-light); }
+
+    .bento-desc { font-size: .84rem; color: var(--text-muted); line-height: 1.65; }
+    .bento-card.featured .bento-desc { color: rgba(255,255,255,.4); }
+
+    .bento-arrow {
+      margin-top: .75rem; font-size: .74rem; font-weight: 600;
+      color: var(--rose-gold); letter-spacing: .06em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: .4rem;
+      text-decoration: none; transition: gap .2s;
+    }
+    .bento-arrow:hover { gap: .8rem; }
+    .bento-card.featured .bento-arrow { color: var(--gold-light); }
+
+    /* ─── WHY US ────────────────────────────── */
+    #why {
+      padding: 7rem 3rem; background: var(--deep);
+      position: relative; overflow: hidden;
+    }
+    #why::before {
+      content: ''; position: absolute; top: -100px; right: -100px;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(196,149,106,.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .why-inner { max-width: 1100px; margin: 0 auto; }
+    .why-header { text-align: center; margin-bottom: 4rem; }
+    .why-header .section-label { color: var(--gold-light); }
+    .why-header .section-title { color: #fff; }
+    .why-header .section-title em { color: var(--rose-gold); }
+
+    .why-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .why-card {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px; padding: 2.5rem 2rem;
+      transition: background .3s, border-color .3s;
+    }
+    .why-card:hover { background: rgba(196,149,106,.08); border-color: rgba(196,149,106,.25); }
+
+    .why-icon-wrap {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(196,149,106,.15);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.4rem;
+    }
+    .why-icon-wrap svg { width: 22px; height: 22px; stroke: var(--rose-gold); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+    .why-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600; color: #fff; margin-bottom: .6rem; letter-spacing: -.01em;
+    }
+    .why-card p { font-size: .87rem; color: rgba(255,255,255,.4); line-height: 1.7; }
+
+    /* ─── GALLERY ───────────────────────────── */
+    #gallery { padding: 8rem 3rem; background: var(--cream); }
+    .gallery-header { text-align: center; max-width: 1100px; margin: 0 auto 3.5rem; }
+
+    .masonry { max-width: 1100px; margin: 0 auto; columns: 3; column-gap: 1.25rem; }
+    .gallery-card {
+      break-inside: avoid; border-radius: 18px; overflow: hidden;
+      margin-bottom: 1.25rem; position: relative;
+      transition: transform .4s ease;
+    }
+    .gallery-card:hover { transform: scale(1.02); }
+    .gallery-card:hover .gallery-card-img { transform: scale(1.06); }
+
+    .gallery-card-img {
+      width: 100%; display: block; object-fit: cover;
+      transition: transform .5s ease;
+    }
+    .gallery-card:nth-child(1) .gallery-card-img,
+    .gallery-card:nth-child(3) .gallery-card-img,
+    .gallery-card:nth-child(5) .gallery-card-img { height: 320px; }
+    .gallery-card:nth-child(2) .gallery-card-img,
+    .gallery-card:nth-child(4) .gallery-card-img,
+    .gallery-card:nth-child(6) .gallery-card-img { height: 240px; }
+
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(42,26,26,.6) 0%, transparent 50%);
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: flex-end; padding: 1.4rem;
+    }
+    .gc-label {
+      font-size: .6rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+      color: rgba(255,255,255,.9); background: rgba(255,255,255,.14);
+      backdrop-filter: blur(8px); padding: .28rem .8rem; border-radius: 100px;
+      border: 1px solid rgba(255,255,255,.2); margin-bottom: .4rem;
+    }
+    .gc-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-weight: 600; color: #fff; letter-spacing: -.01em;
+    }
+
+    /* ─── BOOKING CTA ───────────────────────── */
+    #book {
+      padding: 9rem 3rem; background: var(--deep);
+      position: relative; overflow: hidden; text-align: center;
+    }
+    #book::before {
+      content: ''; position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 400px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(196,149,106,.15) 0%, transparent 65%);
+    }
+    .book-inner { max-width: 680px; margin: 0 auto; position: relative; z-index: 2; }
+    .book-eyebrow { font-size: .63rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--rose-gold); margin-bottom: 1.5rem; }
+    .book-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 600;
+      line-height: .92; letter-spacing: -.025em; color: #fff; margin-bottom: 1.5rem;
+    }
+    .book-title em { font-style: italic; color: var(--rose-gold); }
+    .book-sub { font-size: 1rem; color: rgba(255,255,255,.42); line-height: 1.75; margin-bottom: 2.8rem; }
+    .book-btn {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: var(--rose-gold); color: #fff;
+      padding: 1rem 3rem; border-radius: 100px;
+      font-weight: 700; font-size: .95rem; text-decoration: none; letter-spacing: .04em;
+      transition: background .25s, transform .2s, box-shadow .25s;
+      box-shadow: 0 12px 40px rgba(196,149,106,.3);
+    }
+    .book-btn:hover { background: var(--rose-dark); transform: translateY(-2px); box-shadow: 0 20px 56px rgba(196,149,106,.4); }
+    .book-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .contact-row { margin-top: 3.5rem; display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+    .contact-item { display: flex; align-items: flex-start; gap: .7rem; font-size: .85rem; color: rgba(255,255,255,.4); text-align: left; }
+    .contact-item svg { width: 16px; height: 16px; stroke: var(--rose-gold); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 2px; }
+    .contact-item strong { color: rgba(255,255,255,.7); font-weight: 500; display: block; margin-bottom: 2px; }
+    .contact-item a { color: inherit; text-decoration: none; }
+    .contact-item a:hover { color: var(--rose-gold); }
+
+    /* ─── FOOTER ────────────────────────────── */
+    footer { background: #1A0E0E; border-top: 1px solid rgba(255,255,255,.05); padding: 3rem 3rem 2rem; }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: #fff; letter-spacing: .04em; }
+    .footer-logo-sub { font-size: .53rem; letter-spacing: .2em; text-transform: uppercase; color: var(--rose-gold); display: block; margin-top: 3px; }
+    .footer-brand p { font-size: .82rem; color: rgba(255,255,255,.27); line-height: 1.7; margin-top: .8rem; max-width: 220px; }
+
+    .social-row { display: flex; gap: .8rem; margin-top: 1.2rem; }
+    .social-btn {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.45); text-decoration: none;
+      transition: background .2s, border-color .2s, color .2s;
+    }
+    .social-btn:hover { background: rgba(196,149,106,.15); border-color: rgba(196,149,106,.3); color: var(--rose-gold); }
+    .social-btn svg { width: 15px; height: 15px; }
+
+    .footer-col h4 { font-size: .58rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: 1.2rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+    .footer-col ul a { font-size: .83rem; color: rgba(255,255,255,.38); text-decoration: none; transition: color .2s; }
+    .footer-col ul a:hover { color: var(--rose-gold); }
+
+    .footer-bottom { max-width: 1100px; margin: 0 auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,.05); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-bottom p { font-size: .75rem; color: rgba(255,255,255,.2); }
+    .footer-bottom a { color: var(--rose-gold); text-decoration: none; }
+
+    /* ─── REVEAL ────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .rd1 { transition-delay: .1s; } .rd2 { transition-delay: .2s; }
+    .rd3 { transition-delay: .3s; } .rd4 { transition-delay: .4s; }
+
+    /* ─── MOBILE ────────────────────────────── */
+    @media (max-width: 900px) {
+      .bento { grid-template-columns: repeat(2,1fr); }
+      .bento-card.wide { grid-column: span 2; }
+      .why-grid { grid-template-columns: 1fr 1fr; }
+      .masonry { columns: 2; }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero, #services, #why, #gallery, #book { padding: 5rem 1.5rem; }
+      .hero h1 { font-size: clamp(3rem, 13vw, 5rem); }
+      .bento { grid-template-columns: 1fr; }
+      .bento-card.wide { grid-column: span 1; flex-direction: column; }
+      .bento-card.wide .bento-photo { width: 100%; height: 220px; min-height: unset; }
+      .why-grid { grid-template-columns: 1fr; }
+      .masonry { columns: 1; }
+      .contact-row { gap: 1.5rem; flex-direction: column; align-items: center; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .services-header { flex-direction: column; align-items: flex-start; }
+      #cursor, #cursor-ring { display: none; }
+      body { cursor: auto; }
+      a, button { cursor: auto; }
+    }
+    @media (max-width: 480px) {
+      .footer-inner { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#services" onclick="closeMenu()">Services</a>
+    <a href="#gallery" onclick="closeMenu()">Gallery</a>
+    <a href="#why" onclick="closeMenu()">About</a>
+    <a href="#book" class="m-cta" onclick="closeMenu()">Book Now</a>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#home" class="nav-logo">
+      Nails at Dadeland
+      <span>Premier Nail Studio · Miami</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#why">About</a></li>
+      <li><a href="#book" class="nav-cta">Book Now</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="hero-bg"></div>
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+
+    <div class="hero-eyebrow reveal">
+      <span class="pulse-dot"></span>
+      Premier Nail Studio &nbsp;·&nbsp; Dadeland Mall, Miami
+    </div>
+    <h1 class="reveal rd1">
+      Where Every<br>
+      Detail Becomes<br>
+      <em>Art</em>
+    </h1>
+    <p class="hero-sub reveal rd2">
+      Luxury nail care in the heart of Dadeland.<br>Because your hands deserve the best.
+    </p>
+    <div class="hero-btns reveal rd3">
+      <a href="#book" class="btn-solid">Book Appointment</a>
+      <a href="#services" class="btn-outline">View Services</a>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <span class="scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Gel Manicure <span class="mdot"></span></span>
+      <span class="marquee-item">Acrylic Nails <span class="mdot"></span></span>
+      <span class="marquee-item">Nail Art <span class="mdot"></span></span>
+      <span class="marquee-item">Dip Powder <span class="mdot"></span></span>
+      <span class="marquee-item">Pedicure <span class="mdot"></span></span>
+      <span class="marquee-item">Nail Extensions <span class="mdot"></span></span>
+      <span class="marquee-item">Chrome Nails <span class="mdot"></span></span>
+      <span class="marquee-item">French Tips <span class="mdot"></span></span>
+      <span class="marquee-item">Nail Repair <span class="mdot"></span></span>
+      <span class="marquee-item">Gel X <span class="mdot"></span></span>
+      <span class="marquee-item">Gel Manicure <span class="mdot"></span></span>
+      <span class="marquee-item">Acrylic Nails <span class="mdot"></span></span>
+      <span class="marquee-item">Nail Art <span class="mdot"></span></span>
+      <span class="marquee-item">Dip Powder <span class="mdot"></span></span>
+      <span class="marquee-item">Pedicure <span class="mdot"></span></span>
+      <span class="marquee-item">Nail Extensions <span class="mdot"></span></span>
+      <span class="marquee-item">Chrome Nails <span class="mdot"></span></span>
+      <span class="marquee-item">French Tips <span class="mdot"></span></span>
+      <span class="marquee-item">Nail Repair <span class="mdot"></span></span>
+      <span class="marquee-item">Gel X <span class="mdot"></span></span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services-header reveal">
+      <div>
+        <div class="section-label">Our Services</div>
+        <h2 class="section-title">Crafted for<br><em>perfection</em></h2>
+      </div>
+      <p class="section-sub">Every service is delivered with precision, luxury-grade products, and an obsessive attention to detail.</p>
+    </div>
+
+    <div class="bento reveal rd1">
+      <!-- Wide card -->
+      <div class="bento-card wide">
+        <img class="bento-photo" src="images/nails/service-manicure.jpeg" alt="Signature Manicure" />
+        <div class="bento-body">
+          <div class="bento-name">Signature Manicure</div>
+          <div class="bento-price">Starting at $35</div>
+          <p class="bento-desc">Classic perfection — shaping, cuticle care, massage, and your polish of choice. The ultimate hand ritual.</p>
+          <a href="#book" class="bento-arrow">Book now &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Featured dark card -->
+      <div class="bento-card featured">
+        <img class="bento-photo" src="images/nails/service-gel.jpeg" alt="Gel Manicure" style="height:220px;" />
+        <div class="bento-body">
+          <div class="bento-name">Gel Manicure</div>
+          <div class="bento-price">Starting at $45</div>
+          <p class="bento-desc">Long-lasting gel formula with flawless finish. Up to 3 weeks of chip-free color.</p>
+          <a href="#book" class="bento-arrow">Book now &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="bento-card">
+        <img class="bento-photo" src="images/nails/service-acrylic.jpeg" alt="Acrylic Full Set" />
+        <div class="bento-body">
+          <div class="bento-name">Acrylic Full Set</div>
+          <div class="bento-price">Starting at $65</div>
+          <p class="bento-desc">Sculpted length and strength. Custom shape — coffin, almond, stiletto, square.</p>
+          <a href="#book" class="bento-arrow">Book now &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="bento-card">
+        <img class="bento-photo" src="images/nails/gallery-1.jpeg" alt="Nail Art" />
+        <div class="bento-body">
+          <div class="bento-name">Nail Art</div>
+          <div class="bento-price">From $15 per nail</div>
+          <p class="bento-desc">500+ designs — florals, chrome, abstracts, 3D accents, and bespoke creations.</p>
+          <a href="#book" class="bento-arrow">Book now &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="bento-card">
+        <img class="bento-photo" src="images/nails/gallery-6.jpeg" alt="Spa Pedicure" />
+        <div class="bento-body">
+          <div class="bento-name">Spa Pedicure</div>
+          <div class="bento-price">Starting at $55</div>
+          <p class="bento-desc">Foot soak, exfoliation, callus removal, mask, hot stone massage, and flawless polish.</p>
+          <a href="#book" class="bento-arrow">Book now &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="bento-card">
+        <img class="bento-photo" src="images/nails/gallery-4.jpeg" alt="Dip Powder" />
+        <div class="bento-body">
+          <div class="bento-name">Dip Powder</div>
+          <div class="bento-price">Starting at $50</div>
+          <p class="bento-desc">Stronger than gel, lighter than acrylic. Odorless, no UV lamp, lasts 4–6 weeks.</p>
+          <a href="#book" class="bento-arrow">Book now &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section id="why">
+    <div class="why-inner">
+      <div class="why-header reveal">
+        <div class="section-label">Why Choose Us</div>
+        <h2 class="section-title">The <em>standard</em><br>others aspire to</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card reveal rd1">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <h3>Premium Products Only</h3>
+          <p>We use only top-tier gels, acrylics, and polishes from OPI, Gelish, and CND — never compromising on quality or your health.</p>
+        </div>
+        <div class="why-card reveal rd2">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <h3>Nail Art Specialists</h3>
+          <p>Our artists have over 500 designs mastered and counting. From minimalist linework to hand-painted botanicals and 3D embellishments.</p>
+        </div>
+        <div class="why-card reveal rd3">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>Sanitation First</h3>
+          <p>Hospital-grade sterilization on every tool, every visit. Disposable liners on every pedicure chair. Your safety is non-negotiable.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="gallery-header reveal">
+      <div class="section-label">Our Work</div>
+      <h2 class="section-title">A glimpse into<br>the <em>studio</em></h2>
+    </div>
+    <div class="masonry reveal rd1">
+      <div class="gallery-card">
+        <img class="gallery-card-img" src="images/nails/gallery-1.jpeg" alt="Floral Gel Set" />
+        <div class="gallery-overlay">
+          <span class="gc-label">Nail Art</span>
+          <div class="gc-title">Floral Gel Set</div>
+        </div>
+      </div>
+      <div class="gallery-card">
+        <img class="gallery-card-img" src="images/nails/gallery-2.jpeg" alt="Rose Gold Chrome" />
+        <div class="gallery-overlay">
+          <span class="gc-label">Chrome</span>
+          <div class="gc-title">Rose Gold Chrome</div>
+        </div>
+      </div>
+      <div class="gallery-card">
+        <img class="gallery-card-img" src="images/nails/gallery-3.jpeg" alt="Almond Sculpt" />
+        <div class="gallery-overlay">
+          <span class="gc-label">Acrylic</span>
+          <div class="gc-title">Crystal Almond Set</div>
+        </div>
+      </div>
+      <div class="gallery-card">
+        <img class="gallery-card-img" src="images/nails/gallery-4.jpeg" alt="Nude Abstract" />
+        <div class="gallery-overlay">
+          <span class="gc-label">Gel X</span>
+          <div class="gc-title">Nude Abstract</div>
+        </div>
+      </div>
+      <div class="gallery-card">
+        <img class="gallery-card-img" src="images/nails/gallery-5.jpeg" alt="Modern French" />
+        <div class="gallery-overlay">
+          <span class="gc-label">French</span>
+          <div class="gc-title">Gold French Tips</div>
+        </div>
+      </div>
+      <div class="gallery-card">
+        <img class="gallery-card-img" src="images/nails/gallery-6.jpeg" alt="Dip Powder" />
+        <div class="gallery-overlay">
+          <span class="gc-label">Dip Powder</span>
+          <div class="gc-title">Terracotta Dip</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING CTA -->
+  <section id="book">
+    <div class="book-inner">
+      <div class="book-eyebrow reveal">Reserve Your Appointment</div>
+      <h2 class="book-title reveal rd1">
+        Ready for<br>your <em>best</em><br>nails?
+      </h2>
+      <p class="book-sub reveal rd2">
+        Walk-ins welcome. Appointments recommended.<br>
+        Book online and secure your preferred time in seconds.
+      </p>
+      <a href="tel:+13050000000" class="book-btn reveal rd3">
+        Book Appointment
+        <svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+
+      <div class="contact-row reveal rd4">
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div>
+            <strong>Dadeland Mall</strong>
+            7535 N Kendall Dr, Miami, FL 33156
+          </div>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <div>
+            <strong>Call or Text</strong>
+            <a href="tel:+13050000000">(305) 000-0000</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div>
+            <strong>Hours</strong>
+            Mon–Sat 10am–8pm · Sun 11am–6pm
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo-text">
+          Nails at Dadeland
+          <span class="footer-logo-sub">Premier Nail Studio</span>
+        </div>
+        <p>Luxury nail care at the heart of Dadeland Mall. Where every detail becomes art.</p>
+        <div class="social-row">
+          <a href="#" class="social-btn" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" class="social-btn" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="social-btn" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.25 8.25 0 0 0 4.82 1.55V6.78a4.85 4.85 0 0 1-1.05-.09z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Manicure</a></li>
+          <li><a href="#services">Gel Nails</a></li>
+          <li><a href="#services">Acrylic Set</a></li>
+          <li><a href="#services">Nail Art</a></li>
+          <li><a href="#services">Pedicure</a></li>
+          <li><a href="#services">Dip Powder</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Visit Us</h4>
+        <ul>
+          <li><a href="#">Dadeland Mall</a></li>
+          <li><a href="#">7535 N Kendall Dr</a></li>
+          <li><a href="#">Miami, FL 33156</a></li>
+          <li><a href="#">Mon–Sat: 10am–8pm</a></li>
+          <li><a href="#">Sun: 11am–6pm</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#book">Book Online</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#why">About</a></li>
+          <li><a href="tel:+13050000000">Call Us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Nails at Dadeland. All rights reserved.</p>
+      <p>Built by <a href="#">WEBBSITE</a> — We build websites that hit different.</p>
+    </div>
+  </footer>
+
+  <script>
+    /* Custom cursor */
+    const cur = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+    });
+    (function loop() {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cur.style.width = '16px'; cur.style.height = '16px';
+        ring.style.width = '50px'; ring.style.height = '50px';
+        ring.style.borderColor = 'rgba(196,149,106,.7)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cur.style.width = '9px'; cur.style.height = '9px';
+        ring.style.width = '34px'; ring.style.height = '34px';
+        ring.style.borderColor = 'rgba(196,149,106,.5)';
+      });
+    });
+
+    /* Mobile menu */
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('hamburger').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
+
+    /* Scroll reveal */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    /* Nav shrink */
+    window.addEventListener('scroll', () => {
+      document.querySelector('nav').style.padding =
+        window.scrollY > 60 ? '.75rem 3rem' : '1.1rem 3rem';
+    });
+  </script>
+</body>
+</html>

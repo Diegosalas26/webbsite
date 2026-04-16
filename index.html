@@ -486,20 +486,63 @@
     /* PRICING */
     #pricing { background: var(--white); padding: 8rem 3rem; }
 
+    .pricing-toggle {
+      display: flex;
+      justify-content: center;
+      margin: 2.5rem auto 0;
+      background: var(--gray-light);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px;
+      width: fit-content;
+    }
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      padding: 0.65rem 1.75rem;
+      border-radius: 100px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .toggle-btn.active { background: var(--black); color: #fff; }
+
+    .pricing-view { display: none; }
+    .pricing-view.active {
+      display: block;
+      animation: fadeInUp 0.4s ease forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
     .pricing-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
       max-width: 1000px;
-      margin: 4rem auto 0;
+      margin: 3rem auto 0;
+    }
+    .pricing-cards-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      max-width: 1200px;
+      margin: 3rem auto 0;
     }
     .p-card {
       border: 1.5px solid var(--border);
       border-radius: 20px;
-      padding: 2.5rem;
+      padding: 2.2rem;
       position: relative;
       background: var(--white);
       transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      display: flex;
+      flex-direction: column;
     }
     .p-card:hover { border-color: rgba(255,140,0,0.35); box-shadow: 0 20px 60px rgba(255,140,0,0.07); transform: translateY(-4px); }
     .p-card.featured { border-color: var(--orange); box-shadow: 0 20px 60px rgba(255,140,0,0.1); }
@@ -511,12 +554,13 @@
       padding: 0.28rem 0.85rem; border-radius: 100px; white-space: nowrap;
     }
     .p-tier { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.75rem; }
-    .p-price { font-size: 3.2rem; font-weight: 700; letter-spacing: -0.04em; color: var(--black); line-height: 1; margin-bottom: 0.5rem; }
-    .p-price small { font-size: 1.1rem; font-weight: 400; color: var(--gray); }
-    .p-desc { font-size: 0.84rem; color: var(--gray); line-height: 1.6; margin-bottom: 1.75rem; padding-bottom: 1.75rem; border-bottom: 1px solid var(--border); }
-    .p-list { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 2rem; }
+    .p-price { font-size: 3rem; font-weight: 700; letter-spacing: -0.04em; color: var(--black); line-height: 1; margin-bottom: 0.5rem; }
+    .p-price small { font-size: 1rem; font-weight: 400; color: var(--gray); }
+    .p-desc { font-size: 0.84rem; color: var(--gray); line-height: 1.6; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .p-list { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.75rem; flex: 1; }
     .p-list li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.87rem; color: var(--black); line-height: 1.4; }
     .p-check { color: var(--orange); font-weight: 700; flex-shrink: 0; }
+    .p-cancel { text-align: center; font-size: 0.72rem; color: var(--gray); margin-top: 0.85rem; letter-spacing: 0.01em; }
 
     .p-btn {
       display: block; text-align: center; padding: 0.88rem;
@@ -610,7 +654,9 @@
       .feature-row { grid-template-columns: 1fr; gap: 2.5rem; }
       .feature-row.flip { direction: ltr; }
       .problem-grid, .process-steps { grid-template-columns: 1fr 1fr; }
-      .pricing-cards { grid-template-columns: 1fr; }
+      .pricing-cards, .pricing-cards-4 { grid-template-columns: 1fr; }
+      .pricing-toggle { width: calc(100% - 3rem); }
+      .toggle-btn { padding: 0.6rem 1rem; font-size: 0.8rem; }
       .contact-wrap { grid-template-columns: 1fr; gap: 3rem; }
       .stats-grid { grid-template-columns: 1fr; }
       footer { flex-direction: column; gap: 1rem; text-align: center; }
@@ -805,52 +851,121 @@
 
   <!-- PRICING -->
   <section id="pricing">
-    <div class="container" style="max-width:1100px; margin:0 auto;">
+    <div style="max-width:1200px; margin:0 auto;">
       <div class="section-header reveal">
         <div class="ch-eyebrow" style="margin-bottom:1rem;">Pricing</div>
         <h2>Simple pricing.<br>No surprises.</h2>
         <p>You know exactly what you're getting before we start.</p>
       </div>
-      <div class="pricing-cards">
-        <div class="p-card reveal">
-          <div class="p-tier">Starter</div>
-          <div class="p-price">$999</div>
-          <div class="p-desc">A sharp, fast landing page to get your business online and converting.</div>
-          <ul class="p-list">
-            <li><span class="p-check">+</span> 1-page custom design</li>
-            <li><span class="p-check">+</span> Mobile responsive</li>
-            <li><span class="p-check">+</span> Contact form</li>
-            <li><span class="p-check">+</span> 3 revisions</li>
-            <li><span class="p-check">+</span> Delivered in 5 days</li>
-          </ul>
-          <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+
+      <div class="pricing-toggle reveal">
+        <button class="toggle-btn active" onclick="switchPricing(this, 'projects')">One-Time Projects</button>
+        <button class="toggle-btn" onclick="switchPricing(this, 'monthly')">Monthly Plans</button>
+      </div>
+
+      <!-- ONE-TIME PROJECTS -->
+      <div class="pricing-view active" id="view-projects">
+        <div class="pricing-cards-4">
+          <div class="p-card reveal">
+            <div class="p-tier">Starter</div>
+            <div class="p-price">$799</div>
+            <div class="p-desc">A sharp landing page to get your business online and converting fast.</div>
+            <ul class="p-list">
+              <li><span class="p-check">+</span> 1-page landing page</li>
+              <li><span class="p-check">+</span> Mobile responsive</li>
+              <li><span class="p-check">+</span> Contact form</li>
+              <li><span class="p-check">+</span> 3 revisions</li>
+              <li><span class="p-check">+</span> Delivered in 5 days</li>
+            </ul>
+            <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+          </div>
+          <div class="p-card featured reveal rd1">
+            <div class="p-badge">Most Popular</div>
+            <div class="p-tier">Professional</div>
+            <div class="p-price">$1,499</div>
+            <div class="p-desc">A full website with booking or contact system, multiple pages, ready to grow.</div>
+            <ul class="p-list">
+              <li><span class="p-check">+</span> Up to 5 pages</li>
+              <li><span class="p-check">+</span> Booking or contact system</li>
+              <li><span class="p-check">+</span> Admin dashboard</li>
+              <li><span class="p-check">+</span> Unlimited revisions</li>
+              <li><span class="p-check">+</span> Delivered in 7 days</li>
+            </ul>
+            <a href="#contact" class="p-btn p-btn-orange">Get Started</a>
+          </div>
+          <div class="p-card reveal rd2">
+            <div class="p-tier">Business</div>
+            <div class="p-price">$2,499</div>
+            <div class="p-desc">A powerful multi-page site with e-commerce, integrations, and analytics built in.</div>
+            <ul class="p-list">
+              <li><span class="p-check">+</span> Up to 10 pages</li>
+              <li><span class="p-check">+</span> E-commerce with payments</li>
+              <li><span class="p-check">+</span> Custom integrations</li>
+              <li><span class="p-check">+</span> Analytics dashboard</li>
+              <li><span class="p-check">+</span> Delivered in 14 days</li>
+            </ul>
+            <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+          </div>
+          <div class="p-card reveal rd3">
+            <div class="p-tier">Enterprise</div>
+            <div class="p-price" style="font-size:2rem; letter-spacing:-0.02em; line-height:1.1;">Let's<br>Talk</div>
+            <div class="p-desc">Large-scale projects — web apps, portals, SaaS platforms, and beyond.</div>
+            <ul class="p-list">
+              <li><span class="p-check">+</span> Large-scale projects</li>
+              <li><span class="p-check">+</span> Web apps, portals, SaaS</li>
+              <li><span class="p-check">+</span> Dedicated team</li>
+              <li><span class="p-check">+</span> Timeline by scope</li>
+            </ul>
+            <a href="#contact" class="p-btn p-btn-border">Contact Us</a>
+          </div>
         </div>
-        <div class="p-card featured reveal rd1">
-          <div class="p-badge">Most Popular</div>
-          <div class="p-tier">Professional</div>
-          <div class="p-price">$1,399</div>
-          <div class="p-desc">A full website with booking or contact system, multiple pages, ready to grow.</div>
-          <ul class="p-list">
-            <li><span class="p-check">+</span> Up to 5 pages</li>
-            <li><span class="p-check">+</span> Booking or contact system</li>
-            <li><span class="p-check">+</span> Admin dashboard</li>
-            <li><span class="p-check">+</span> Unlimited revisions</li>
-            <li><span class="p-check">+</span> Delivered in 7 days</li>
-          </ul>
-          <a href="#contact" class="p-btn p-btn-orange">Get Started</a>
-        </div>
-        <div class="p-card reveal rd2">
-          <div class="p-tier">Custom</div>
-          <div class="p-price" style="font-size:2.2rem; letter-spacing:-0.02em; line-height:1.1;">Let's<br>Talk</div>
-          <div class="p-desc">E-commerce, dashboards, integrations — anything beyond the standard.</div>
-          <ul class="p-list">
-            <li><span class="p-check">+</span> Unlimited pages</li>
-            <li><span class="p-check">+</span> E-commerce and payments</li>
-            <li><span class="p-check">+</span> Custom integrations</li>
-            <li><span class="p-check">+</span> Analytics dashboard</li>
-            <li><span class="p-check">+</span> Timeline by scope</li>
-          </ul>
-          <a href="#contact" class="p-btn p-btn-border">Contact Us</a>
+      </div>
+
+      <!-- MONTHLY PLANS -->
+      <div class="pricing-view" id="view-monthly">
+        <div class="pricing-cards">
+          <div class="p-card reveal">
+            <div class="p-tier">Basic</div>
+            <div class="p-price">$50<small>/mo</small></div>
+            <div class="p-desc">Everything you need to keep your site fast, secure, and up to date.</div>
+            <ul class="p-list">
+              <li><span class="p-check">+</span> Hosting included</li>
+              <li><span class="p-check">+</span> Content updates (up to 2/mo)</li>
+              <li><span class="p-check">+</span> Email support</li>
+              <li><span class="p-check">+</span> Uptime monitoring</li>
+            </ul>
+            <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+            <p class="p-cancel">Cancel anytime. No contracts.</p>
+          </div>
+          <div class="p-card featured reveal rd1">
+            <div class="p-badge">Most Popular</div>
+            <div class="p-tier">Growth</div>
+            <div class="p-price">$100<small>/mo</small></div>
+            <div class="p-desc">Active support and growth tools for businesses that are scaling.</div>
+            <ul class="p-list">
+              <li><span class="p-check">+</span> Everything in Basic</li>
+              <li><span class="p-check">+</span> Unlimited content updates</li>
+              <li><span class="p-check">+</span> Basic monthly SEO</li>
+              <li><span class="p-check">+</span> Monthly analytics report</li>
+              <li><span class="p-check">+</span> Priority support</li>
+            </ul>
+            <a href="#contact" class="p-btn p-btn-orange">Get Started</a>
+            <p class="p-cancel">Cancel anytime. No contracts.</p>
+          </div>
+          <div class="p-card reveal rd2">
+            <div class="p-tier">Agency</div>
+            <div class="p-price">$300<small>/mo</small></div>
+            <div class="p-desc">Full-service digital partner for agencies and high-growth businesses.</div>
+            <ul class="p-list">
+              <li><span class="p-check">+</span> Everything in Growth</li>
+              <li><span class="p-check">+</span> New landing page per month</li>
+              <li><span class="p-check">+</span> Email campaigns</li>
+              <li><span class="p-check">+</span> A/B testing</li>
+              <li><span class="p-check">+</span> Dedicated account manager</li>
+            </ul>
+            <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+            <p class="p-cancel">Cancel anytime. No contracts.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -918,6 +1033,14 @@
         ring.style.borderColor = 'rgba(255,140,0,0.45)';
       });
     });
+
+    // Pricing toggle
+    function switchPricing(btn, type) {
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.pricing-view').forEach(v => v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('view-' + type).classList.add('active');
+    }
 
     // Scroll reveal
     const obs = new IntersectionObserver(entries => {
