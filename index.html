@@ -982,22 +982,23 @@
         <div class="c-item"><span class="c-dot"></span> +1 (305) 000-0000</div>
         <div class="c-item"><span class="c-dot"></span> Response within 24 hours</div>
       </div>
-      <div class="c-form reveal rd1">
+      <form class="c-form reveal rd1" action="https://formspree.io/f/webbsite.us@gmail.com" method="POST">
         <label class="c-label">Your Name</label>
-        <input class="c-input" type="text" placeholder="John Smith" />
+        <input class="c-input" type="text" name="name" placeholder="John Smith" required />
         <label class="c-label">Email</label>
-        <input class="c-input" type="email" placeholder="john@yourbusiness.com" />
+        <input class="c-input" type="email" name="email" placeholder="john@yourbusiness.com" required />
         <label class="c-label">What do you need?</label>
-        <select class="c-select">
+        <select class="c-select" name="package">
           <option value="">Select a package...</option>
-          <option>Starter — $999</option>
-          <option>Professional — $1,399</option>
+          <option>Starter — $799</option>
+          <option>Professional — $1,499</option>
+          <option>Business — $2,499</option>
           <option>Custom — Let's Talk</option>
         </select>
         <label class="c-label">About your business</label>
-        <textarea class="c-textarea" placeholder="What does your business do? Any specific features you need?"></textarea>
-        <button class="c-btn">Send Message</button>
-      </div>
+        <textarea class="c-textarea" name="message" placeholder="What does your business do? Any specific features you need?"></textarea>
+        <button type="submit" class="c-btn">Send Message</button>
+      </form>
     </div>
   </section>
 
