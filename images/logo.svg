@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" fill="none">
+  <!-- Browser frame top-left corner -->
+  <path d="M120 18 L40 18 Q26 18 26 32 L26 52" stroke="#0A0A0A" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- Browser frame top-right corner -->
+  <path d="M400 18 L480 18 Q494 18 494 32 L494 52" stroke="#0A0A0A" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- Browser frame bottom-left corner -->
+  <path d="M26 108 L26 128 Q26 142 40 142 L120 142" stroke="#0A0A0A" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- Browser frame bottom-right corner -->
+  <path d="M494 108 L494 128 Q494 142 480 142 L400 142" stroke="#0A0A0A" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- Text: WE -->
+  <text x="38" y="122" font-family="'Arial Black', 'Arial Bold', sans-serif" font-weight="900" font-size="96" fill="#0A0A0A">WE</text>
+  <!-- Text: BB in orange -->
+  <text x="192" y="122" font-family="'Arial Black', 'Arial Bold', sans-serif" font-weight="900" font-size="96" fill="#FF8C00">BB</text>
+  <!-- Text: SITE -->
+  <text x="348" y="122" font-family="'Arial Black', 'Arial Bold', sans-serif" font-weight="900" font-size="96" fill="#0A0A0A">SITE</text>
+</svg>
