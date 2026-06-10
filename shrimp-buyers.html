@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compradores de Camaron USA & Canada — Directorio 2026</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy: #0b1f3a;
+      --deep: #0d2d4f;
+      --blue: #1565c0;
+      --teal: #00796b;
+      --gold: #f59e0b;
+      --red: #c62828;
+      --green: #2e7d32;
+      --light: #eef4fb;
+      --text: #1a2332;
+      --muted: #5a6a7a;
+      --white: #ffffff;
+    }
+
+    body { font-family: 'Inter', sans-serif; background: #edf2f7; color: var(--text); }
+
+    /* COVER */
+    .cover {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: linear-gradient(155deg, #051728 0%, #0d2d4f 50%, #00695c 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 50px 60px;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.04);
+      top: -250px; right: -250px;
+    }
+
+    .cover-hero {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      object-position: center;
+      margin-bottom: 36px;
+      flex-shrink: 0;
+      align-self: stretch;
+      opacity: 0.85;
+    }
+
+    .cover-tag {
+      background: rgba(245,158,11,0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 8px 22px;
+      border-radius: 30px;
+      margin-bottom: 28px;
+    }
+
+    .cover h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .cover h1 span { color: var(--gold); }
+
+    .cover .sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      max-width: 500px;
+      line-height: 1.7;
+      margin: 16px auto 40px;
+    }
+
+    .cover-bar { width: 60px; height: 3px; background: var(--gold); border-radius: 2px; margin: 0 auto 40px; }
+
+    .cover-stats { display: flex; gap: 44px; justify-content: center; flex-wrap: wrap; }
+    .cstat .num { font-size: 30px; font-weight: 800; color: var(--gold); display: block; }
+    .cstat .lbl { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+
+    .cover-foot {
+      position: absolute;
+      bottom: 28px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+    }
+
+    /* PAGE */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+      padding: 46px 48px;
+      page-break-after: always;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--light);
+      padding-bottom: 14px;
+      margin-bottom: 32px;
+    }
+
+    .page-header .brand { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--deep); }
+    .page-header .pg { font-size: 11px; color: var(--muted); }
+
+    .sec-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+    .sec-title { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--navy); margin-bottom: 10px; line-height: 1.2; }
+    .sec-intro { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 28px; }
+
+    /* COUNTRY BANNER */
+    .country-banner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .country-banner img {
+      height: 22px;
+      border-radius: 3px;
+      object-fit: cover;
+    }
+
+    .country-banner.usa { background: #e8f0fe; color: #1a3a6b; border-left: 5px solid #1565c0; }
+    .country-banner.can { background: #fce4e4; color: #7b1a1a; border-left: 5px solid #c62828; }
+
+    /* COMPANY CARD */
+    .card {
+      border: 1px solid #dde8f4;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .card-head {
+      padding: 18px 22px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      border-bottom: 1px solid #eef2f8;
+    }
+
+    .card-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--deep), var(--blue));
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-num.can { background: linear-gradient(135deg, #b71c1c, #e53935); }
+
+    .card-info h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 2px; }
+    .card-info .sub2 { font-size: 11px; color: var(--teal); font-weight: 600; }
+
+    .card-badge {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .card-badge.vol { background: #e8f5e9; color: #2e7d32; }
+    .card-badge.imp { background: #e8f0fe; color: #1565c0; }
+    .card-badge.proc { background: #fff8e1; color: #e65100; }
+
+    .card-body {
+      padding: 18px 22px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+    }
+
+    .card-desc { font-size: 12.5px; line-height: 1.72; color: #3a4a5a; }
+
+    /* CONTACT BLOCK */
+    .contact-block {
+      background: #f7fafd;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .contact-block h4 {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--teal);
+      margin-bottom: 2px;
+    }
+
+    .c-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .c-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .c-text {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .c-text strong { font-weight: 600; color: var(--navy); }
+
+    /* TAGS */
+    .card-foot {
+      background: #f7fafd;
+      padding: 12px 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      border-top: 1px solid #eef2f8;
+    }
+
+    .tag {
+      background: var(--light);
+      border: 1px solid #c5d8e8;
+      color: #1a3a6b;
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 3px 11px;
+      border-radius: 20px;
+    }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 24px; }
+    thead tr { background: var(--navy); color: #fff; }
+    thead th { padding: 11px 13px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.4px; }
+    tbody tr:nth-child(even) { background: #f7fafd; }
+    tbody td { padding: 10px 13px; border-bottom: 1px solid #e8edf5; }
+    tbody td:first-child { font-weight: 600; color: var(--navy); }
+
+    .badge-usa { background: #e8f0fe; color: #1a3a6b; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+    .badge-can { background: #fce4e4; color: #7b1a1a; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+
+    /* TIP BOX */
+    .tip {
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      border-left: 4px solid var(--teal);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+
+    .tip h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .tip p { font-size: 12.5px; color: #3a4a5a; line-height: 1.7; }
+
+    .tip.warn { background: linear-gradient(135deg, #fff8e1, #fff3cd); border-left-color: var(--gold); }
+    .tip.info { background: linear-gradient(135deg, #e8f0fe, #dce8ff); border-left-color: var(--blue); }
+
+    /* SCRIPT BOX */
+    .script-box {
+      background: #f7fafd;
+      border: 1px solid #dde8f4;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .script-box h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+    .script-box p { font-size: 12.5px; color: #3a4a5a; line-height: 1.75; font-style: italic; border-left: 3px solid var(--teal); padding-left: 14px; }
+
+    /* PRINT */
+    @media print {
+      body { background: white; }
+      .cover, .page { margin: 0; box-shadow: none; }
+      @page { margin: 0; size: A4; }
+    }
+
+    @media screen {
+      .cover, .page { box-shadow: 0 4px 40px rgba(0,0,0,0.10); margin-bottom: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="cover">
+  <img class="cover-hero" src="images/shrimp-cover.jpeg" alt="Fresh raw shrimp on ice">
+
+  <div class="cover-tag">Directorio Comercial — Shrimp Buyers USA &amp; Canada</div>
+  <h1>Compradores y Plantas<br>Procesadoras de <span>Camaron</span></h1>
+  <div class="cover-bar"></div>
+  <p class="sub">Directorio actualizado de las principales empresas compradoras, importadoras y plantas procesadoras de camaron en Estados Unidos y Canada, con contactos de compras y procurement.</p>
+  <div class="cover-stats">
+    <div class="cstat"><span class="num">10</span><span class="lbl">Empresas Listadas</span></div>
+    <div class="cstat"><span class="num">$6.6B</span><span class="lbl">Importacion USA 2024</span></div>
+    <div class="cstat"><span class="num">#1</span><span class="lbl">Seafood mas consumido USA</span></div>
+    <div class="cstat"><span class="num">606K</span><span class="lbl">Toneladas importadas/ano</span></div>
+  </div>
+  <div class="cover-foot">Preparado por Diego Salas — Abril 2026 — Uso Confidencial</div>
+</div>
+
+<!-- PAGINA 1 — USA (1-3) -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">Shrimp Buyers Directory 2026</span>
+    <span class="pg">Pagina 1 de 4</span>
+  </div>
+
+  <div class="sec-label">Estados Unidos — Compradores Principales</div>
+  <h2 class="sec-title">Top Importadores &amp; Procesadores de Camaron en USA</h2>
+  <p class="sec-intro">EE.UU. importa mas de 606,000 toneladas metricas de camaron al ano, con un valor aproximado de <strong>$6.6 mil millones USD en 2024</strong>. El camaron es el producto de mar mas consumido en el pais (38% del consumo total de seafood). Las empresas a continuacion son los compradores mas activos por volumen de importacion.</p>
+
+  <div class="country-banner usa">
+    <img src="images/usa-flag.jpeg" alt="USA">
+    ESTADOS UNIDOS — Plantas Procesadoras &amp; Compradores Mayoristas
+  </div>
+
+  <!-- 1. AZ Gems -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num">1</div>
+      <div class="card-info">
+        <h3>AZ Gems Inc.</h3>
+        <div class="sub2">Mayor importador de vannamei en USA por volumen de envios — Redlands, CA</div>
+      </div>
+      <div class="card-badge vol">21% del mercado — 5,910 envios</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        AZ Gems es el <strong>importador numero 1 de camaron vannamei en Estados Unidos</strong> por volumen de envios segun datos de importacion 2024. Fundada en 2012, es un productor-exportador-importador verticalmente integrado especializado en camaron premium y seafood congelado.<br><br>
+        El 100% de su camaron importado es <strong>certificado BAP o ASC</strong>. Trabaja con granjas propias y asociadas en America Latina y Asia. Compra camaron en diversas tallas (16/20, 21/25, 26/30, 31/40, 41/50) en diferentes presentaciones: HLSO, PD, PUD, EZP y cooked.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Direccion:</strong> 405 Missouri Court, Redlands, CA 92373</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Telefono:</strong> +1 (909) 798-3607</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Fax:</strong> +1 (909) 809-9513</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Email:</strong> support@azgems.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> azgems.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Volumen:</strong> Mayor importador USA vannamei</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Vannamei</span>
+      <span class="tag">HLSO</span>
+      <span class="tag">PD / PUD</span>
+      <span class="tag">Cooked</span>
+      <span class="tag">BAP Certified</span>
+      <span class="tag">ASC Certified</span>
+      <span class="tag">Importador + Productor</span>
+    </div>
+  </div>
+
+  <!-- 2. Chicken of the Sea Frozen Foods -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num">2</div>
+      <div class="card-info">
+        <h3>Chicken of the Sea Frozen Foods (COSFF)</h3>
+        <div class="sub2">Division frozen de Thai Union — 2do comprador por envios — San Diego, CA</div>
+      </div>
+      <div class="card-badge imp">17% mercado — 4,919 envios</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        Chicken of the Sea Frozen Foods es la division de seafood congelado de <strong>Thai Union Group</strong> (empresa tailandesa con $4B+ en ventas), y el <strong>segundo importador de camaron en USA por numero de envios</strong>. Importa camaron para retail, club stores (Costco, Sam's Club), foodservice y canal institucional.<br><br>
+        Compra camaron de multiples origenes: Ecuador, India, Vietnam, Indonesia. Sus productos van desde camaron raw sin procesar hasta value-added (empanizado, mariposa, cocktail, ring). Tienen un portal B2B dedicado para proveedores de seafood.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>HQ:</strong> 9330 Scranton Rd, San Diego, CA 92121</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Portal B2B:</strong> b2b.chickenofthesea.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Contacto:</strong> b2b.chickenofthesea.com/contact</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Telefono:</strong> (858) 597-4100</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> chickenofthesea.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Matriz:</strong> Thai Union Group (Tailandia)</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Raw Shrimp</span>
+      <span class="tag">Breaded</span>
+      <span class="tag">Butterfly</span>
+      <span class="tag">Cocktail Shrimp</span>
+      <span class="tag">Retail</span>
+      <span class="tag">Club Stores</span>
+      <span class="tag">Foodservice</span>
+    </div>
+  </div>
+
+  <!-- 3. Aqua Star -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num">3</div>
+      <div class="card-info">
+        <h3>Aqua Star (USA) Corp.</h3>
+        <div class="sub2">3er importador por volumen — Proveedor nacional de seafood — Seattle, WA</div>
+      </div>
+      <div class="card-badge imp">17% mercado — 4,665 envios</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        Aqua Star es uno de los principales proveedores de seafood congelado en Norteamerica. Distribuye a retailers, restaurantes y operadores de foodservice en todo EE.UU. Su division de camaron es una de las mas activas del mercado americano, con compras provenientes principalmente de <strong>Ecuador, India, y paises asiaticos</strong>.<br><br>
+        Ofrece una linea completa de camaron congelado incluyendo white vannamei, black tiger, wild-caught del Golfo, y value-added. Su bodega principal esta en Seattle, WA con operaciones en multiples estados.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>HQ:</strong> 720 Olive Way, Seattle, WA 98101</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Telefono:</strong> 1-800-232-6280</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Contacto:</strong> aquastar.com/contact-us</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Envios:</strong> 4,665 envios/ano de camaron</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> aquastar.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Distribucion:</strong> Nacional USA + Canada</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">White Vannamei</span>
+      <span class="tag">Black Tiger</span>
+      <span class="tag">Wild Gulf Shrimp</span>
+      <span class="tag">Value-Added</span>
+      <span class="tag">IQF Frozen</span>
+      <span class="tag">Retail</span>
+      <span class="tag">Foodservice</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGINA 2 — USA (4-6) -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">Shrimp Buyers Directory 2026</span>
+    <span class="pg">Pagina 2 de 4</span>
+  </div>
+
+  <div class="country-banner usa">
+    <img src="images/usa-flag.jpeg" alt="USA">
+    ESTADOS UNIDOS — Continuacion
+  </div>
+
+  <!-- 4. Red Chamber -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num">4</div>
+      <div class="card-info">
+        <h3>Red Chamber Co.</h3>
+        <div class="sub2">Mayor supplier privado de seafood en USA — Forbes #272 — Vernon, CA</div>
+      </div>
+      <div class="card-badge vol">~$2B Revenue — 1,700 empleados</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        Red Chamber es el <strong>mayor proveedor privado de seafood de EE.UU.</strong>, con operaciones desde 1973. Esta en la lista Forbes de las 272 empresas privadas mas grandes de America. Compra camaron de multiples origenes globalmente y lo procesa en sus plantas bicoastales, con capacidad de cold storage de <strong>mas de 60 millones de libras</strong>.<br><br>
+        Tiene acuerdos de suministro con grandes cadenas como Red Lobster (saldo de $7.6M en 2024). Su departamento de compras es activo en la adquisicion de camaron entero, pelado y cooked en diferentes calibres para su red de distribucion nacional.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Direccion:</strong> 1912 E. Vernon Ave., Vernon, CA 90058</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Telefono:</strong> (323) 234-9000</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Fax:</strong> (323) 231-8888</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Email:</strong> info@redchamber.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> redchamber.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Cold Storage:</strong> +60 millones de lbs</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Camaron Entero</span>
+      <span class="tag">Pelado IQF</span>
+      <span class="tag">Cooked</span>
+      <span class="tag">Langosta</span>
+      <span class="tag">Cangrejo</span>
+      <span class="tag">Import Global</span>
+      <span class="tag">Forbes #272</span>
+    </div>
+  </div>
+
+  <!-- 5. Mazzetta Company -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num">5</div>
+      <div class="card-info">
+        <h3>Mazzetta Company, LLC</h3>
+        <div class="sub2">Importador premium de seafood y camaron — Highland Park, IL</div>
+      </div>
+      <div class="card-badge proc">Importador &amp; Procesador Premium</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        Mazzetta es uno de los <strong>mayores importadores y procesadores de camaron, mejillones, langosta y cangrejo</strong> en EE.UU. Su sede en Illinois les da acceso logistico al Medio Oeste americano. Tienen una reputacion solida en el mercado de foodservice premium y retail de alto valor.<br><br>
+        Compran camaron de varios paises incluyendo Ecuador, Argentina (camaron patagonico), India y Vietnam. Su portal de contacto para ventas tiene formulario especifico para proveedores. Son activos en ferias como Seafood Expo North America.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Direccion:</strong> 1990 Saint Johns Ave #100, Highland Park, IL 60035</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Telefono:</strong> (847) 433-1150</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Ventas:</strong> mazzetta.com/contact-seafood-sales</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> mazzetta.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Mercado:</strong> Retail + Foodservice Premium</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Origen:</strong> Ecuador, India, Argentina, Vietnam</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Camaron Premium</span>
+      <span class="tag">Patagonian Shrimp</span>
+      <span class="tag">Mejillones</span>
+      <span class="tag">Langosta</span>
+      <span class="tag">Cangrejo</span>
+      <span class="tag">Foodservice Premium</span>
+    </div>
+  </div>
+
+  <!-- 6. Beaver Street Fisheries -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num">6</div>
+      <div class="card-info">
+        <h3>Beaver Street Fisheries (BSF)</h3>
+        <div class="sub2">Lider sureste USA — +70 anos en el mercado — Jacksonville, FL</div>
+      </div>
+      <div class="card-badge vol">~$206M Revenue — Red Global Camaron</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        BSF es el <strong>importador, fabricante y distribuidor de seafood congelado mas importante del sureste de EE.UU.</strong> Su marca retail Sea Best esta en Publix, Walmart, Costco y Winn-Dixie. Mantienen una <strong>red global de proveedores de camaron</strong> que garantiza disponibilidad todo el ano.<br><br>
+        Anuncio una alianza con Dot Foods (julio 2025) para expandir su red de distribucion. Compran camaron de America Latina, Asia y el Golfo de Mexico. Sus plantas estan certificadas bajo GFSI y BAP.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Direccion:</strong> 1741 West Beaver St., Jacksonville, FL 32209</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Telefono:</strong> (904) 354-8533</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Email:</strong> info@bsfseafood.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Contacto:</strong> beaverstreetfisheries.com/contact-us</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> beaverstreetfisheries.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Certificaciones:</strong> GFSI, BAP, HACCP</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Camaron Global</span>
+      <span class="tag">Sea Best Brand</span>
+      <span class="tag">IQF Frozen</span>
+      <span class="tag">Retail Nacional</span>
+      <span class="tag">Institucional</span>
+      <span class="tag">GFSI / BAP</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGINA 3 — USA (7-8) + CANADA -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">Shrimp Buyers Directory 2026</span>
+    <span class="pg">Pagina 3 de 4</span>
+  </div>
+
+  <div class="country-banner usa">
+    <img src="images/usa-flag.jpeg" alt="USA">
+    ESTADOS UNIDOS — Continuacion
+  </div>
+
+  <!-- 7. Netuno USA -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num">7</div>
+      <div class="card-info">
+        <h3>Netuno USA</h3>
+        <div class="sub2">Importador mayorista — 400+ distribuidores — Doral / Fort Lauderdale, FL</div>
+      </div>
+      <div class="card-badge imp">Importador + Distribuidor 4 Continentes</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        Netuno USA es un <strong>distribuidor e importador mayorista de seafood</strong> que abastece a mas de <strong>400 distribuidores en EE.UU.</strong> y opera en cuatro continentes. Con base en Florida, tiene acceso directo al mercado hispano-latino y a los principales puertos de entrada del sur del pais.<br><br>
+        Compran y distribuyen camaron, tilapia y otros productos de seafood para el canal foodservice y distribucion mayorista. Es una empresa de capital brasileno con fuerte presencia en Miami/Doral, el hub de importacion de seafood mas importante del sur de EE.UU.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Oficina:</strong> 511 SE 5th Ave Ste 103-104, Fort Lauderdale, FL 33301</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Planta:</strong> 10305 NW 41st St, Doral, FL 33178</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Telefono:</strong> (305) 513-0904</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Contacto:</strong> netunousa.com/contact-us</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> netunousa.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Clientes:</strong> +400 distribuidores USA</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Camaron</span>
+      <span class="tag">Tilapia</span>
+      <span class="tag">Mayorista</span>
+      <span class="tag">Foodservice</span>
+      <span class="tag">Sur Florida</span>
+      <span class="tag">Importador Brasil</span>
+    </div>
+  </div>
+
+  <!-- 8. Pacific Seafood -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num">8</div>
+      <div class="card-info">
+        <h3>Pacific Seafood Group</h3>
+        <div class="sub2">Distribuidor familiar — 41 plantas en 11 estados — Clackamas, OR</div>
+      </div>
+      <div class="card-badge vol">~$1.5B Revenue — 3,000+ empleados</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        Pacific Seafood es uno de los distribuidores mayoristas mas grandes del Pacifico americano. Aunque su enfoque principal es el pescado de la costa oeste, tienen una <strong>linea activa de camaron rosa del Pacifico (coldwater pink shrimp)</strong> y camaron importado para su canal de foodservice y retail.<br><br>
+        Recibio un contrato USDA para camaron ensalada (salad shrimp) en julio 2025. Con distribucion propia terrestre y aerea en 11 estados, es un comprador relevante para productores que quieran entrar al mercado del Pacifico americano.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>HQ:</strong> 16797 SE 130th Ave, Clackamas, OR 97015</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Telefono:</strong> (503) 905-3400</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> pacificseafood.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Cobertura:</strong> 11 estados, 41 instalaciones</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Contrato:</strong> USDA Salad Shrimp 2025</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Pink Shrimp</span>
+      <span class="tag">Salad Shrimp</span>
+      <span class="tag">Camaron Importado</span>
+      <span class="tag">USDA Contract</span>
+      <span class="tag">Pacifico NW</span>
+      <span class="tag">Foodservice</span>
+    </div>
+  </div>
+
+  <div class="country-banner can" style="margin-top: 10px;">
+    <img src="images/canada-flag.jpeg" alt="Canada">
+    CANADA — Compradores y Plantas Procesadoras de Camaron
+  </div>
+
+  <!-- 9. Clearwater -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num can">9</div>
+      <div class="card-info">
+        <h3>Clearwater Seafoods Inc.</h3>
+        <div class="sub2">Lider en camaron de agua fria — Bedford, Nova Scotia, Canada</div>
+      </div>
+      <div class="card-badge proc">Productor + Procesador Canada</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        Clearwater es el <strong>proveedor de seafood premium mas importante de Canada</strong>, especializado en camaron de agua fria (coldwater shrimp), langosta, vieiras, almejas y cangrejo de las nieves. Sus productos se exportan a EE.UU., Europa y Asia bajo certificacion eco.<br><br>
+        Es un comprador activo de materia prima de camaron para complementar su produccion. Sus productos de camaron wild-caught del Atlantico Norte son altamente valorados en el mercado premium americano y canadiense.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>HQ:</strong> 757 Bedford Highway, Bedford, NS B4A 3Z7, Canada</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Tel:</strong> (902) 443-0550</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Fax:</strong> (902) 443-8365</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Ventas CA:</strong> cdnsales@clearwater.ca</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Tel Ventas:</strong> (905) 858-9514 — Carole Morrison</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> clearwater.ca</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Coldwater Shrimp</span>
+      <span class="tag">Atlantico Norte</span>
+      <span class="tag">Wild-Caught</span>
+      <span class="tag">Eco-Certified</span>
+      <span class="tag">Premium</span>
+      <span class="tag">Export USA</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGINA 4 — CANADA + TABLA + TIPS -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">Shrimp Buyers Directory 2026</span>
+    <span class="pg">Pagina 4 de 4</span>
+  </div>
+
+  <div class="country-banner can">
+    <img src="images/canada-flag.jpeg" alt="Canada">
+    CANADA — Continuacion
+  </div>
+
+  <!-- 10. High Liner -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-num can">10</div>
+      <div class="card-info">
+        <h3>High Liner Foods Inc.</h3>
+        <div class="sub2">Procesador lider de seafood congelado Norteamerica — Lunenburg, NS</div>
+      </div>
+      <div class="card-badge imp">~$1.09B Revenue — Nasdaq: HLNFF</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">
+        High Liner Foods es el <strong>procesador y comercializador de seafood congelado mas importante de Canada</strong>, con ventas en USA, Canada y Mexico. Su marca Mirabel es la referencia de camaron premium en Canada (Black Tiger y White Shrimp).<br><br>
+        Como empresa publica con equipos de procurement internacional, compra camaron de multiples origenes para su linea de value-added (empanizado, relleno, etc.) y camaron puro IQF para retail y foodservice. Tienen un equipo de compras activo para sourcing global.
+      </div>
+      <div class="contact-block">
+        <h4>Contacto de Compras</h4>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>HQ:</strong> 100 Battery Point, PO Box 910, Lunenburg, NS B0J 2C0, Canada</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Tel:</strong> 1-902-634-8811</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Fax:</strong> 1-902-634-6228</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Email:</strong> info@highlinerfoods.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Web:</strong> highlinerfoods.com</span></div>
+        <div class="c-row"><div class="c-dot"></div><span class="c-text"><strong>Bolsa:</strong> Nasdaq: HLNFF (empresa publica)</span></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="tag">Mirabel Brand</span>
+      <span class="tag">Black Tiger</span>
+      <span class="tag">White Shrimp</span>
+      <span class="tag">Breaded</span>
+      <span class="tag">IQF</span>
+      <span class="tag">Retail Canada</span>
+      <span class="tag">Procurement Global</span>
+    </div>
+  </div>
+
+  <!-- TABLA RESUMEN -->
+  <div class="sec-label" style="margin-top: 8px;">Resumen de Contactos</div>
+  <h2 class="sec-title" style="font-size: 20px; margin-bottom: 12px;">Directorio Rapido — Todos los Contactos</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Empresa</th>
+        <th>Pais</th>
+        <th>Telefono</th>
+        <th>Email / Web</th>
+        <th>Ciudad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>AZ Gems Inc.</td>
+        <td><span class="badge-usa">USA</span></td>
+        <td>+1 (909) 798-3607</td>
+        <td>support@azgems.com</td>
+        <td>Redlands, CA</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Chicken of the Sea FF</td>
+        <td><span class="badge-usa">USA</span></td>
+        <td>(858) 597-4100</td>
+        <td>b2b.chickenofthesea.com</td>
+        <td>San Diego, CA</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Aqua Star USA Corp.</td>
+        <td><span class="badge-usa">USA</span></td>
+        <td>1-800-232-6280</td>
+        <td>aquastar.com/contact-us</td>
+        <td>Seattle, WA</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Red Chamber Co.</td>
+        <td><span class="badge-usa">USA</span></td>
+        <td>(323) 234-9000</td>
+        <td>info@redchamber.com</td>
+        <td>Vernon, CA</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Mazzetta Company</td>
+        <td><span class="badge-usa">USA</span></td>
+        <td>(847) 433-1150</td>
+        <td>mazzetta.com/contact-seafood-sales</td>
+        <td>Highland Park, IL</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Beaver St. Fisheries</td>
+        <td><span class="badge-usa">USA</span></td>
+        <td>(904) 354-8533</td>
+        <td>info@bsfseafood.com</td>
+        <td>Jacksonville, FL</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Netuno USA</td>
+        <td><span class="badge-usa">USA</span></td>
+        <td>(305) 513-0904</td>
+        <td>netunousa.com/contact-us</td>
+        <td>Doral, FL</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Pacific Seafood Group</td>
+        <td><span class="badge-usa">USA</span></td>
+        <td>(503) 905-3400</td>
+        <td>pacificseafood.com</td>
+        <td>Clackamas, OR</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td>Clearwater Seafoods</td>
+        <td><span class="badge-can">CAN</span></td>
+        <td>(902) 443-0550</td>
+        <td>cdnsales@clearwater.ca</td>
+        <td>Bedford, NS</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td>High Liner Foods</td>
+        <td><span class="badge-can">CAN</span></td>
+        <td>1-902-634-8811</td>
+        <td>info@highlinerfoods.com</td>
+        <td>Lunenburg, NS</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip info">
+    <h4>Como contactar el departamento de compras correctamente</h4>
+    <p>Llama al numero general y pide hablar con el <strong>Purchasing Manager</strong> o <strong>Seafood Procurement Department</strong>. Para emails, menciona en el asunto: "New Shrimp Supplier — [especie] — [calibres disponibles] — [volumen mensual]". Incluye tu ficha tecnica, certificaciones (BAP, ASC, MSC), y disponibilidad de volumen.</p>
+  </div>
+
+  <div class="tip warn">
+    <h4>Ferias Clave para Contactar Compradores en Persona</h4>
+    <p><strong>Seafood Expo North America</strong> (Boston, marzo) y <strong>Seafood Expo Global</strong> (Barcelona, abril) son los eventos donde todos estos compradores tienen presencia. El contacto directo en ferias acelera significativamente el proceso de calificacion como proveedor.</p>
+  </div>
+
+  <div class="script-box">
+    <h4>Guion de Llamada Sugerido (en ingles)</h4>
+    <p>"Hello, my name is [name] from [company]. We are a shrimp producer / processor located in [country]. We are looking to introduce our product to your procurement team. We offer [species: vannamei / tiger / etc.] in sizes [calibres], with [BAP/ASC] certification, with a capacity of [X] metric tons per month. Could you please connect me with your seafood purchasing manager or let me know the best way to submit a product sample and specification sheet?"</p>
+  </div>
+
+  <div style="margin-top: 20px; text-align: center; padding: 16px; border-top: 1px solid #dde6ef;">
+    <p style="font-size: 11px; color: var(--muted);">
+      Directorio preparado para empresa de seafood — Abril 2026<br>
+      Fuentes: USImportData, Volza, ZoomInfo, Company Websites, SeafoodSource — Datos verificados de fuentes publicas
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

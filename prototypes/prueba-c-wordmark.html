@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRUEBA C — Wordmark Zoom-Through</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange: #E8720C;
+      --black: #0D0D0D;
+      --white: #FFFFFF;
+      --gray: #6B6B6B;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+    html.lenis { height: auto; }
+    html.lenis-smooth { scroll-behavior: auto !important; }
+    body { font-family: var(--font); background: var(--black); color: var(--white); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+    .proto-bar { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 9999;
+      display: flex; gap: 4px; background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+      padding: 5px; border-radius: 999px; box-shadow: 0 8px 30px rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .proto-bar a { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-decoration: none;
+      color: rgba(255,255,255,0.6); padding: 7px 14px; border-radius: 999px; transition: all .3s ease; }
+    .proto-bar a.active { background: var(--orange); color: #fff; }
+    .proto-bar a:hover { color: #fff; }
+
+    section.hero-pin { position: relative; height: 280vh; }
+    .hero-stage { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden;
+      background: var(--black); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+    .destination { position: absolute; inset: 0; background: url('06-destination.jpeg') center/cover no-repeat;
+      opacity: 0; transform: scale(1.1); z-index: 0; will-change: opacity, transform; }
+
+    .top-meta { position: absolute; top: 16vh; text-align: center; z-index: 4; will-change: opacity, transform; }
+    .top-meta .eyebrow { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); font-weight: 700; }
+
+    /* the wordmark: destination image clipped inside the letters */
+    .wordmark { position: relative; z-index: 3; font-size: clamp(64px, 17vw, 260px); font-weight: 800;
+      letter-spacing: -0.05em; line-height: 0.9; text-align: center;
+      background: url('06-destination.jpeg') center/120% no-repeat;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      transform-origin: center center; will-change: transform, opacity; }
+    /* faint outline so the word reads even where the image is dark */
+    .wordmark { text-shadow: 0 0 0 transparent; }
+
+    .sub { position: absolute; bottom: 12vh; text-align: center; z-index: 4; will-change: opacity, transform; }
+    .sub p { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 22px; }
+    .cta-pill { background: var(--orange); color: #fff; text-decoration: none; font-weight: 600; font-size: 14px;
+      padding: 14px 28px; border-radius: 999px; }
+    .scroll-cue { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; margin-left: 18px; }
+
+    .after { background: var(--white); color: var(--black); padding: 140px 32px; text-align: center; }
+    .after h2 { font-size: clamp(36px, 5vw, 72px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.0; max-width: 900px; margin: 0 auto; }
+    .after h2 em { font-style: normal; color: var(--orange); }
+    .after p { color: var(--gray); margin-top: 26px; font-size: 16px; }
+
+    @media (max-width: 900px) {
+      section.hero-pin { height: 230vh; }
+      .top-meta { top: 12vh; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .destination { opacity: 1; transform: none; }
+      .wordmark, .top-meta, .sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="proto-bar">
+    <a href="prueba-a-browser.html">A · Browser</a>
+    <a href="prueba-b-laptop.html">B · Aperture</a>
+    <a href="prueba-c-wordmark.html" class="active">C · Wordmark</a>
+  </nav>
+
+  <section class="hero-pin">
+    <div class="hero-stage">
+      <div class="destination" aria-hidden="true"></div>
+
+      <div class="top-meta">
+        <div class="eyebrow">Web Design Studio</div>
+      </div>
+
+      <div class="wordmark">WEBBSITE</div>
+
+      <div class="sub">
+        <p>Scroll — the name opens into the work.</p>
+        <a class="cta-pill" href="#start">Start a project</a>
+        <a class="scroll-cue" href="#after">Scroll ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="after" id="after">
+    <h2>The brand opens straight into the <em>finished site.</em></h2>
+    <p>Services, Process, Pricing and Contact would continue from here — untouched.</p>
+  </section>
+
+  <script>
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, smoothTouch: false });
+      gsap.registerPlugin(ScrollTrigger);
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+
+      gsap.timeline({ scrollTrigger: { trigger: '.hero-pin', start: 'top top', end: 'bottom bottom', scrub: 1 } })
+        // labels clear away
+        .to('.top-meta', { opacity: 0, y: -40, ease: 'power2.in' }, 0)
+        .to('.sub',      { opacity: 0, y: 40, ease: 'power1.in' }, 0)
+        // the image-filled wordmark swells until a letter fills the frame
+        .to('.wordmark', { scale: 14, ease: 'power2.in', duration: 0.8 }, 0)
+        // full destination resolves behind, wordmark dissolves into it
+        .to('.destination', { opacity: 1, scale: 1, ease: 'power2.out', duration: 0.55 }, 0.45)
+        .to('.wordmark',    { opacity: 0, duration: 0.3, ease: 'power2.out' }, 0.72);
+    }
+  </script>
+</body>
+</html>

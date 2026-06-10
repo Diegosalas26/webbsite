@@ -5,130 +5,127 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WEBBSITE — We Build Websites That Hit Different</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --orange: #FF8C00;
-      --black: #0A0A0A;
+      --orange: #E8720C;
+      --black: #0D0D0D;
       --gray: #6B6B6B;
       --gray-light: #F5F5F7;
-      --border: #E8E8E8;
+      --border: rgba(0,0,0,0.08);
       --white: #FFFFFF;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
     }
 
-    html { scroll-behavior: smooth; }
+    /* Lenis smooth scroll (smooth-scroll.md — NO usar scroll-behavior con Lenis) */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--white);
       color: var(--black);
       overflow-x: hidden;
-      cursor: none;
     }
 
-    /* CURSOR */
-    #cursor {
-      position: fixed;
-      width: 10px; height: 10px;
-      background: var(--orange);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width 0.25s, height 0.25s;
-    }
-    #cursor-ring {
-      position: fixed;
-      width: 36px; height: 36px;
-      border: 1.5px solid rgba(255,140,0,0.45);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s, border-color 0.3s;
-    }
-    a, button { cursor: none; }
-
-    /* NAV */
+    /* ── NAV: floating pill ── */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 500;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 1rem 3rem;
-      background: rgba(255,255,255,0.85);
+      gap: 2.5rem;
+      padding: 0.5rem 0.5rem 0.5rem 1.75rem;
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 100px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+      white-space: nowrap;
     }
-    .nav-logo img { height: 72px; display: block; }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-logo img { height: 26px; display: block; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a {
       color: var(--gray);
       text-decoration: none;
       font-size: 0.82rem;
       font-weight: 500;
-      letter-spacing: 0.04em;
-      transition: color 0.2s;
+      letter-spacing: 0.01em;
+      transition: color 0.2s var(--ease-out);
     }
-    .nav-links a:hover { color: var(--black); }
+    @media (hover: hover) and (pointer: fine) {
+      .nav-links a:hover { color: var(--black); }
+    }
     .nav-cta {
-      background: var(--orange) !important;
+      background: var(--black) !important;
       color: #fff !important;
-      padding: 0.55rem 1.4rem;
+      padding: 0.6rem 1.4rem;
       border-radius: 100px;
       font-weight: 600 !important;
-    }
-    .nav-cta:hover { opacity: 0.85; }
-
-    /* ============================
-       CHAPTER 1 — HERO (The Hook)
-    ============================== */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      font-size: 0.82rem !important;
+      text-decoration: none;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 10rem 2rem 5rem;
-      background: var(--white);
-      position: relative;
+      transition: opacity 0.2s var(--ease-out), transform 0.16s var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) { .nav-cta:hover { opacity: 0.78; } }
+    .nav-cta:active { transform: scale(0.96); }
+
+    /* ── HERO: asymmetric split ── */
+    .hero {
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      padding: 8rem 5rem 5rem;
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     .hero-eyebrow {
-      font-size: 0.72rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--orange);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+      margin-bottom: 2rem;
+      background: rgba(232,114,12,0.07);
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      border: 1px solid rgba(232,114,12,0.15);
     }
     .hero-dot {
-      width: 6px; height: 6px;
+      width: 5px; height: 5px;
       background: var(--orange);
       border-radius: 50%;
-      animation: blink 2s ease-in-out infinite;
+      animation: blink 2s var(--ease-out) infinite;
     }
     @keyframes blink {
       0%, 100% { opacity: 1; } 50% { opacity: 0.2; }
     }
 
     .hero h1 {
-      font-size: clamp(3.2rem, 8.5vw, 9rem);
-      font-weight: 700;
+      font-size: clamp(3rem, 5.5vw, 5.4rem);
+      font-weight: 800;
       line-height: 0.95;
       letter-spacing: -0.04em;
       color: var(--black);
-      margin-bottom: 2rem;
+      margin-bottom: 1.75rem;
     }
     .hero h1 em { font-style: normal; color: var(--orange); }
     .hero h1 .outline {
@@ -137,99 +134,90 @@
     }
 
     .hero-sub {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--gray);
-      max-width: 500px;
-      margin: 0 auto 3rem;
-      line-height: 1.7;
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
       font-weight: 400;
     }
 
     .hero-btns {
       display: flex;
-      gap: 1rem;
-      justify-content: center;
+      gap: 0.75rem;
       flex-wrap: wrap;
-      margin-bottom: 5rem;
     }
 
     .btn-solid {
       background: var(--black);
       color: #fff;
-      padding: 0.9rem 2.4rem;
+      padding: 0.85rem 2rem;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       border-radius: 100px;
       text-decoration: none;
-      transition: opacity 0.2s, transform 0.2s;
+      display: inline-flex;
+      align-items: center;
+      transition: opacity 0.2s var(--ease-out), transform 0.16s var(--ease-out);
     }
-    .btn-solid:hover { opacity: 0.7; transform: translateY(-2px); }
+    @media (hover: hover) and (pointer: fine) { .btn-solid:hover { opacity: 0.75; } }
+    .btn-solid:active { transform: scale(0.97); }
 
     .btn-border {
       background: transparent;
       color: var(--black);
-      border: 1.5px solid var(--border);
-      padding: 0.9rem 2.4rem;
+      border: 1.5px solid rgba(0,0,0,0.12);
+      padding: 0.85rem 2rem;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       border-radius: 100px;
       text-decoration: none;
-      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+      transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out), transform 0.16s var(--ease-out);
     }
-    .btn-border:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px); }
+    @media (hover: hover) and (pointer: fine) {
+      .btn-border:hover { border-color: var(--orange); color: var(--orange); }
+    }
+    .btn-border:active { transform: scale(0.97); }
 
-    /* HERO DEVICE STACK */
-    .device-stack {
+    /* hero visual */
+    .hero-visual { position: relative; }
+    .hero-img-main {
       width: 100%;
-      max-width: 860px;
-      position: relative;
-      margin: 0 auto;
-      height: 380px;
+      border-radius: 22px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.05);
     }
-
-    .device-stack img {
-      position: absolute;
-      border-radius: 16px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.06);
+    .hero-img-main img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
+      display: block;
     }
-
-    .d-main {
-      width: 480px; height: 340px;
-      left: 50%; top: 0;
-      transform: translateX(-50%);
-      z-index: 3;
-      animation: floatMain 6s ease-in-out infinite;
-    }
-    .d-left {
-      width: 200px; height: 220px;
-      left: 2%; top: 60px;
-      z-index: 2;
+    .hero-img-float {
+      position: absolute;
+      bottom: -2rem;
+      left: -2.5rem;
+      width: 42%;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 2/3;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.14);
+      border: 4px solid var(--white);
       animation: floatLeft 7s ease-in-out infinite;
-      transform: rotate(-4deg);
     }
-    .d-right {
-      width: 210px; height: 230px;
-      right: 2%; top: 50px;
-      z-index: 2;
-      animation: floatRight 5.5s ease-in-out infinite;
-      transform: rotate(4deg);
-    }
-
-    @keyframes floatMain {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-16px); }
+    .hero-img-float img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     @keyframes floatLeft {
-      0%, 100% { transform: rotate(-4deg) translateY(0); }
-      50% { transform: rotate(-2deg) translateY(-10px); }
-    }
-    @keyframes floatRight {
-      0%, 100% { transform: rotate(4deg) translateY(-6px); }
-      50% { transform: rotate(2deg) translateY(6px); }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
-    /* MARQUEE */
+    /* ── MARQUEE ── */
     .marquee-wrap {
       overflow: hidden;
       padding: 0.9rem 0;
@@ -248,8 +236,8 @@
       align-items: center;
       gap: 1.2rem;
       padding: 0 1.8rem;
-      font-size: 0.73rem;
-      font-weight: 600;
+      font-size: 0.71rem;
+      font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--gray);
@@ -259,16 +247,14 @@
       0% { transform: translateX(0); } 100% { transform: translateX(-50%); }
     }
 
-    /* ==============================
-       CHAPTER 2 — THE PROBLEM
-    ================================ */
+    /* ── PROBLEM ── */
     .chapter-problem {
       background: var(--black);
-      padding: 8rem 3rem;
+      padding: 9rem 5rem;
       text-align: center;
     }
     .ch-eyebrow {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -276,8 +262,8 @@
       margin-bottom: 1.5rem;
     }
     .chapter-problem h2 {
-      font-size: clamp(2.5rem, 5vw, 5rem);
-      font-weight: 700;
+      font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+      font-weight: 800;
       letter-spacing: -0.04em;
       line-height: 1.0;
       color: #fff;
@@ -288,49 +274,58 @@
       -webkit-text-stroke: 2px #fff;
       color: transparent;
     }
-    .chapter-problem p {
-      font-size: 1.1rem;
+    .chapter-problem > p {
+      font-size: 1rem;
       color: #666;
-      max-width: 520px;
-      margin: 0 auto 4rem;
-      line-height: 1.75;
+      max-width: 500px;
+      margin: 0 auto 4.5rem;
+      line-height: 1.8;
     }
+
+    /* double-bezel problem cards */
     .problem-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      max-width: 900px;
+      gap: 1rem;
+      max-width: 960px;
       margin: 0 auto;
-      background: #222;
-      border: 1px solid #222;
-      border-radius: 12px;
-      overflow: hidden;
+    }
+    .prob-outer {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 5px;
+      transition: border-color 0.3s var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .prob-outer:hover { border-color: rgba(255,255,255,0.12); }
     }
     .prob-card {
       background: #111;
       padding: 2.5rem 2rem;
       text-align: left;
-      transition: background 0.3s;
+      border-radius: 16px;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.04);
+      height: 100%;
     }
-    .prob-card:hover { background: #161616; }
     .prob-num {
-      font-size: 2.5rem;
-      font-weight: 700;
+      font-size: 2.2rem;
+      font-weight: 800;
       letter-spacing: -0.04em;
       color: var(--orange);
-      opacity: 0.2;
+      opacity: 0.25;
       line-height: 1;
       margin-bottom: 1rem;
     }
-    .prob-card h3 { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
-    .prob-card p { font-size: 0.82rem; color: #555; line-height: 1.6; }
+    .prob-card h3 { font-size: 0.93rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+    .prob-card p { font-size: 0.82rem; color: #555; line-height: 1.65; }
 
-    /* STATS BAR */
+    /* ── STATS ── */
     .stats-bar {
       background: var(--gray-light);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      padding: 4rem 3rem;
+      padding: 5rem;
     }
     .stats-grid {
       max-width: 860px;
@@ -341,9 +336,9 @@
       text-align: center;
     }
     .stat-val {
-      font-size: 3.8rem;
-      font-weight: 700;
-      letter-spacing: -0.04em;
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: -0.05em;
       color: var(--black);
       line-height: 1;
     }
@@ -351,22 +346,21 @@
     .stat-lbl {
       font-size: 0.82rem;
       color: var(--gray);
-      margin-top: 0.4rem;
+      margin-top: 0.5rem;
       font-weight: 500;
     }
 
-    /* ===============================
-       CHAPTER 3 — THE SOLUTION
-    ================================= */
-    #services { background: var(--white); padding: 8rem 3rem; }
+    /* ── SERVICES ── */
+    #services { background: var(--white); padding: 9rem 5rem; }
 
     .section-header {
       text-align: center;
-      margin-bottom: 5rem;
+      margin: 0 auto 6rem;
+      max-width: 640px;
     }
     .section-header h2 {
-      font-size: clamp(2.2rem, 4.5vw, 4rem);
-      font-weight: 700;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 800;
       letter-spacing: -0.04em;
       line-height: 1.0;
       color: var(--black);
@@ -375,19 +369,16 @@
     .section-header p {
       font-size: 1rem;
       color: var(--gray);
-      max-width: 460px;
-      margin: 0 auto;
-      line-height: 1.7;
+      line-height: 1.75;
     }
 
-    /* Feature rows */
     .feature-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 5rem;
       align-items: center;
       max-width: 1100px;
-      margin: 0 auto 8rem;
+      margin: 0 auto 9rem;
     }
     .feature-row:last-child { margin-bottom: 0; }
     .feature-row.flip { direction: rtl; }
@@ -406,13 +397,15 @@
       width: 90%;
       height: 90%;
       object-fit: cover;
-      border-radius: 12px;
-      transition: transform 0.7s ease;
+      border-radius: 14px;
+      transition: transform 0.7s var(--ease-out);
     }
-    .feat-img:hover img { transform: scale(1.04) translateY(-5px); }
+    @media (hover: hover) and (pointer: fine) {
+      .feat-img:hover img { transform: scale(1.04); }
+    }
 
     .feat-num {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -420,8 +413,8 @@
       margin-bottom: 1rem;
     }
     .feat-title {
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      font-weight: 700;
+      font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+      font-weight: 800;
       letter-spacing: -0.04em;
       color: var(--black);
       margin-bottom: 1rem;
@@ -441,33 +434,136 @@
       font-size: 0.88rem;
       font-weight: 600;
       text-decoration: none;
-      transition: gap 0.25s;
+      transition: gap 0.25s var(--ease-out);
     }
-    .feat-link:hover { gap: 0.9rem; }
+    @media (hover: hover) and (pointer: fine) {
+      .feat-link:hover { gap: 0.9rem; }
+    }
 
-    /* PROCESS */
-    #process { background: var(--gray-light); padding: 8rem 3rem; border-top: 1px solid var(--border); }
+    /* ── ZOOM-THROUGH (design C / prueba-c-wordmark) — reusable: Studio + Pricing ── */
+    /* set the fill/reveal image per-instance: style="--zt-img:url('images/NAME.jpeg')" on .zt-pin */
+    .zt-pin { position: relative; height: 260vh; background: var(--black); }
+    .zt-stage {
+      position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden;
+      background: var(--black);
+      display: flex; align-items: center; justify-content: center;
+    }
+    /* full-bleed image revealed at the end of the zoom */
+    .zt-img {
+      position: absolute; inset: 0;
+      background: var(--zt-img) center/cover no-repeat;
+      opacity: 0; transform: scale(1.1); z-index: 0; will-change: opacity, transform;
+    }
+    .zt-meta { position: absolute; top: 15vh; left: 0; right: 0; text-align: center; z-index: 4; will-change: opacity, transform; }
+    .zt-eyebrow {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--orange);
+    }
+    /* the wordmark: the reveal image clipped inside the letters */
+    .zt-mark {
+      position: relative; z-index: 3; text-align: center;
+      font-size: clamp(4.5rem, 18vw, 17rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.9;
+      background: var(--zt-img) center/120% no-repeat;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      transform-origin: center center; will-change: transform, opacity;
+    }
+    .zt-sub { position: absolute; bottom: 11vh; left: 0; right: 0; text-align: center; z-index: 4; will-change: opacity, transform; }
+    .zt-sub p { color: rgba(255,255,255,0.72); font-size: clamp(1rem, 2vw, 1.4rem); font-weight: 600; letter-spacing: -0.01em; margin-bottom: 1.1rem; }
+    .zt-scrollcue { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; }
+
+    /* plans block — continues straight out of the reveal */
+    .studio-plans { background: var(--black); padding: 8rem 5rem 9rem; }
+    .studio-inner { max-width: 1100px; margin: 0 auto; }
+    .studio-plans-head { text-align: center; margin-bottom: 4rem; }
+    .studio-plans-head h2 { font-size: clamp(2rem, 3.6vw, 3.2rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; color: #fff; margin: 1rem 0; }
+    .studio-desc { font-size: 0.98rem; color: #8a8a8a; line-height: 1.8; max-width: 580px; margin: 0 auto; }
+    .studio-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    /* double-bezel cards on dark (mirrors problem/contact aesthetic) */
+    .s-card-outer {
+      position: relative;
+      border-radius: 22px;
+      padding: 5px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out), transform 0.25s var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .s-card-outer:hover {
+        border-color: rgba(232,114,12,0.3);
+        box-shadow: 0 16px 48px rgba(232,114,12,0.10);
+        transform: translateY(-3px);
+      }
+    }
+    .s-card-outer:active { transform: scale(0.99); }
+    .s-card-outer.featured {
+      border-color: var(--orange);
+      box-shadow: 0 16px 48px rgba(232,114,12,0.14);
+    }
+    .s-card {
+      background: #111;
+      border-radius: 18px;
+      padding: 2.2rem;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .s-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--orange); color: #fff;
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.28rem 0.9rem; border-radius: 100px; white-space: nowrap;
+    }
+    .s-tier { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #888; margin-bottom: 0.75rem; }
+    .s-price { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.04em; color: #fff; line-height: 1; margin-bottom: 0.6rem; }
+    .s-price small { font-size: 0.95rem; font-weight: 400; color: #777; }
+    .s-desc { font-size: 0.84rem; color: #888; line-height: 1.6; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .s-list { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.75rem; flex: 1; }
+    .s-list li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.87rem; color: #e0e0e0; line-height: 1.4; }
+    .s-check { color: var(--orange); font-weight: 700; flex-shrink: 0; }
+    .s-btn {
+      display: block; text-align: center; padding: 0.88rem;
+      border-radius: 100px; font-weight: 600; font-size: 0.87rem;
+      text-decoration: none;
+      transition: opacity 0.2s var(--ease-out), transform 0.16s var(--ease-out);
+    }
+    .s-btn:active { transform: scale(0.97); }
+    .s-btn-light { background: #fff; color: var(--black); }
+    @media (hover: hover) and (pointer: fine) { .s-btn-light:hover { opacity: 0.85; } }
+    .s-btn-orange { background: var(--orange); color: #fff; }
+    @media (hover: hover) and (pointer: fine) { .s-btn-orange:hover { opacity: 0.85; } }
+
+    /* ── PROCESS ── */
+    #process { background: var(--gray-light); padding: 9rem 5rem; border-top: 1px solid var(--border); }
 
     .process-steps {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
       max-width: 1100px;
-      margin: 4rem auto 0;
+      margin: 5rem auto 0;
       background: var(--border);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 20px;
       overflow: hidden;
     }
     .p-step {
       background: var(--white);
       padding: 2.5rem;
-      transition: background 0.3s;
+      transition: background 0.25s var(--ease-out);
     }
-    .p-step:hover { background: var(--gray-light); }
+    @media (hover: hover) and (pointer: fine) {
+      .p-step:hover { background: #fafafa; }
+    }
     .p-num {
-      font-size: 3rem;
-      font-weight: 700;
+      font-size: 2.8rem;
+      font-weight: 800;
       letter-spacing: -0.05em;
       color: var(--orange);
       opacity: 0.2;
@@ -481,10 +577,10 @@
       margin-bottom: 0.5rem;
       letter-spacing: -0.01em;
     }
-    .p-step p { font-size: 0.85rem; color: var(--gray); line-height: 1.65; }
+    .p-step p { font-size: 0.84rem; color: var(--gray); line-height: 1.65; }
 
-    /* PRICING */
-    #pricing { background: var(--white); padding: 8rem 3rem; }
+    /* ── PRICING ── */
+    #pricing-plans { background: var(--white); padding: 9rem 5rem; }
 
     .pricing-toggle {
       display: flex;
@@ -493,7 +589,7 @@
       background: var(--gray-light);
       border: 1px solid var(--border);
       border-radius: 100px;
-      padding: 5px;
+      padding: 4px;
       width: fit-content;
     }
     .toggle-btn {
@@ -501,29 +597,30 @@
       border: none;
       padding: 0.65rem 1.75rem;
       border-radius: 100px;
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--gray);
       cursor: pointer;
-      transition: all 0.25s;
+      transition: background 0.25s var(--ease-out), color 0.25s var(--ease-out), transform 0.16s var(--ease-out);
     }
     .toggle-btn.active { background: var(--black); color: #fff; }
+    .toggle-btn:active { transform: scale(0.97); }
 
     .pricing-view { display: none; }
     .pricing-view.active {
       display: block;
-      animation: fadeInUp 0.4s ease forwards;
+      animation: fadeInUp 0.45s var(--ease-out) forwards;
     }
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(14px); }
+      from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     .pricing-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
+      gap: 1.25rem;
       max-width: 1000px;
       margin: 3rem auto 0;
     }
@@ -534,84 +631,112 @@
       max-width: 1200px;
       margin: 3rem auto 0;
     }
-    .p-card {
-      border: 1.5px solid var(--border);
-      border-radius: 20px;
-      padding: 2.2rem;
+
+    /* double-bezel pricing */
+    .p-card-outer {
+      border-radius: 22px;
+      padding: 5px;
+      background: rgba(0,0,0,0.02);
+      border: 1px solid var(--border);
+      transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out), transform 0.25s var(--ease-out);
       position: relative;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .p-card-outer:hover {
+        border-color: rgba(232,114,12,0.3);
+        box-shadow: 0 16px 48px rgba(232,114,12,0.07);
+        transform: translateY(-3px);
+      }
+    }
+    .p-card-outer:active { transform: scale(0.99); }
+    .p-card-outer.featured {
+      border-color: var(--orange);
+      box-shadow: 0 16px 48px rgba(232,114,12,0.10);
+    }
+    .p-card {
       background: var(--white);
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      border-radius: 18px;
+      padding: 2.2rem;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.8);
       display: flex;
       flex-direction: column;
+      height: 100%;
     }
-    .p-card:hover { border-color: rgba(255,140,0,0.35); box-shadow: 0 20px 60px rgba(255,140,0,0.07); transform: translateY(-4px); }
-    .p-card.featured { border-color: var(--orange); box-shadow: 0 20px 60px rgba(255,140,0,0.1); }
 
     .p-badge {
-      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
       background: var(--orange); color: #fff;
-      font-size: 0.63rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 0.28rem 0.85rem; border-radius: 100px; white-space: nowrap;
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.28rem 0.9rem; border-radius: 100px; white-space: nowrap;
     }
     .p-tier { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.75rem; }
-    .p-price { font-size: 3rem; font-weight: 700; letter-spacing: -0.04em; color: var(--black); line-height: 1; margin-bottom: 0.5rem; }
-    .p-price small { font-size: 1rem; font-weight: 400; color: var(--gray); }
+    .p-price { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.04em; color: var(--black); line-height: 1; margin-bottom: 0.5rem; }
+    .p-price small { font-size: 0.95rem; font-weight: 400; color: var(--gray); }
     .p-desc { font-size: 0.84rem; color: var(--gray); line-height: 1.6; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
     .p-list { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.75rem; flex: 1; }
     .p-list li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.87rem; color: var(--black); line-height: 1.4; }
     .p-check { color: var(--orange); font-weight: 700; flex-shrink: 0; }
-    .p-cancel { text-align: center; font-size: 0.72rem; color: var(--gray); margin-top: 0.85rem; letter-spacing: 0.01em; }
+    .p-cancel { text-align: center; font-size: 0.72rem; color: var(--gray); margin-top: 0.85rem; }
 
     .p-btn {
       display: block; text-align: center; padding: 0.88rem;
       border-radius: 100px; font-weight: 600; font-size: 0.87rem;
-      text-decoration: none; transition: all 0.2s; letter-spacing: 0.01em;
+      text-decoration: none;
+      transition: opacity 0.2s var(--ease-out), transform 0.16s var(--ease-out);
     }
+    .p-btn:active { transform: scale(0.97); }
     .p-btn-black { background: var(--black); color: #fff; }
-    .p-btn-black:hover { opacity: 0.75; }
+    @media (hover: hover) and (pointer: fine) { .p-btn-black:hover { opacity: 0.75; } }
     .p-btn-orange { background: var(--orange); color: #fff; }
-    .p-btn-orange:hover { opacity: 0.85; }
+    @media (hover: hover) and (pointer: fine) { .p-btn-orange:hover { opacity: 0.85; } }
     .p-btn-border { border: 1.5px solid var(--border); color: var(--black); }
-    .p-btn-border:hover { border-color: var(--orange); color: var(--orange); }
+    @media (hover: hover) and (pointer: fine) {
+      .p-btn-border:hover { border-color: var(--orange); color: var(--orange); }
+    }
 
-    /* ==============================
-       CHAPTER 4 — THE CTA
-    ================================ */
-    #contact { background: var(--black); padding: 8rem 3rem; }
+    /* ── CONTACT ── */
+    #contact { background: var(--black); padding: 9rem 5rem; }
 
     .contact-wrap {
       max-width: 1100px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 5rem;
+      gap: 6rem;
       align-items: start;
     }
     .c-big {
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 700;
+      font-size: clamp(2.5rem, 4.5vw, 4.2rem);
+      font-weight: 800;
       letter-spacing: -0.04em;
       line-height: 0.97;
       color: #fff;
       margin-bottom: 1.5rem;
     }
     .c-big em { font-style: normal; color: var(--orange); }
-    .c-sub { font-size: 0.95rem; color: #555; line-height: 1.75; margin-bottom: 2.5rem; }
+    .c-sub { font-size: 0.95rem; color: #555; line-height: 1.8; margin-bottom: 2.5rem; }
     .c-item { display: flex; align-items: center; gap: 0.75rem; font-size: 0.88rem; color: #555; margin-bottom: 0.75rem; }
     .c-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; flex-shrink: 0; }
 
+    /* double-bezel form */
+    .c-form-outer {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 24px;
+      padding: 5px;
+    }
     .c-form {
       background: #111;
-      border: 1px solid #222;
       border-radius: 20px;
       padding: 2.5rem;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.04);
     }
-    .c-label { display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #444; margin-bottom: 0.4rem; }
+    .c-label { display: block; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #444; margin-bottom: 0.4rem; }
     .c-input, .c-select, .c-textarea {
-      width: 100%; background: #0a0a0a; border: 1px solid #222; border-radius: 8px;
+      width: 100%; background: #0a0a0a; border: 1px solid #1e1e1e; border-radius: 10px;
       padding: 0.8rem 1rem; color: #fff;
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem;
-      outline: none; transition: border-color 0.2s; margin-bottom: 1.1rem; -webkit-appearance: none;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s var(--ease-out); margin-bottom: 1.1rem; -webkit-appearance: none;
     }
     .c-input:focus, .c-select:focus, .c-textarea:focus { border-color: var(--orange); }
     .c-textarea { resize: vertical; min-height: 90px; }
@@ -619,57 +744,99 @@
     .c-btn {
       width: 100%; background: var(--orange); color: #fff; border: none;
       border-radius: 100px; padding: 1rem; font-weight: 700; font-size: 0.9rem;
-      font-family: 'Space Grotesk', sans-serif; letter-spacing: 0.02em; transition: opacity 0.2s;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      transition: opacity 0.2s var(--ease-out), transform 0.16s var(--ease-out);
     }
-    .c-btn:hover { opacity: 0.85; }
+    @media (hover: hover) and (pointer: fine) { .c-btn:hover { opacity: 0.85; } }
+    .c-btn:active { transform: scale(0.97); }
 
-    /* FOOTER */
+    /* ── FOOTER ── */
     footer {
       background: var(--black);
-      border-top: 1px solid #1a1a1a;
-      padding: 2.5rem 3rem;
+      border-top: 1px solid #111;
+      padding: 2rem 5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .footer-logo img { height: 36px; display: block; }
-    footer p { font-size: 0.78rem; color: #333; }
+    .footer-logo img { height: 30px; display: block; }
+    footer p { font-size: 0.78rem; color: #2d2d2d; }
 
-    /* REVEAL */
-    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.85s ease, transform 0.85s ease; }
+    /* ── REVEALS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
+    }
     .reveal.visible { opacity: 1; transform: translateY(0); }
-    .rd1 { transition-delay: 0.1s; }
-    .rd2 { transition-delay: 0.2s; }
-    .rd3 { transition-delay: 0.3s; }
+    .rd1 { transition-delay: 0.08s; }
+    .rd2 { transition-delay: 0.16s; }
+    .rd3 { transition-delay: 0.24s; }
 
-    /* MOBILE */
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
+    .stagger {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+      transition-delay: calc(var(--i, 0) * 80ms);
+    }
+    .stagger.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .stagger {
+        transition: opacity 0.2s ease;
+        transform: none !important;
+      }
+      .hero-img-float, .hero-dot { animation: none; }
+      .marquee-track { animation-play-state: paused; }
+      /* Zoom-through: sin scroll-pin, sección estática y legible */
+      .zt-pin { height: auto; }
+      .zt-stage { position: relative; height: auto; min-height: 60vh; padding: 7rem 1.5rem; flex-direction: column; gap: 1.4rem; }
+      .zt-img { opacity: 0.20; transform: none; }
+      .zt-meta, .zt-sub { position: static; }
+      .zt-scrollcue { display: none; }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      nav {
+        top: 0; left: 0; right: 0;
+        transform: none;
+        border-radius: 0;
+        border-left: none; border-right: none; border-top: none;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        gap: 0;
+        justify-content: space-between;
+      }
       .nav-links { display: none; }
-      .hero, #services, #process, #pricing, #contact, .chapter-problem { padding: 5rem 1.5rem; }
-      .stats-bar { padding: 3rem 1.5rem; }
-      .device-stack { height: 220px; }
-      .d-main { width: 280px; height: 200px; }
-      .d-left, .d-right { display: none; }
-      .feature-row { grid-template-columns: 1fr; gap: 2.5rem; }
-      .feature-row.flip { direction: ltr; }
-      .problem-grid, .process-steps { grid-template-columns: 1fr 1fr; }
-      .pricing-cards, .pricing-cards-4 { grid-template-columns: 1fr; }
-      .pricing-toggle { width: calc(100% - 3rem); }
-      .toggle-btn { padding: 0.6rem 1rem; font-size: 0.8rem; }
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 6rem 1.5rem 4rem;
+        text-align: center;
+        gap: 3rem;
+      }
+      .hero-sub, .hero-eyebrow { margin-left: auto; margin-right: auto; }
+      .hero-btns { justify-content: center; }
+      .hero-img-float { left: -1rem; bottom: -1rem; }
+      .chapter-problem, #services, .studio-plans, #process, #pricing-plans, #contact { padding: 6rem 1.5rem; }
+      .stats-bar { padding: 4rem 1.5rem; }
+      .problem-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+      .process-steps { grid-template-columns: 1fr 1fr; }
+      .pricing-cards, .pricing-cards-4, .studio-cards { grid-template-columns: 1fr; }
+      .zt-pin { height: 220vh; }
+      .zt-meta { top: 12vh; }
+      .zt-sub { bottom: 9vh; }
       .contact-wrap { grid-template-columns: 1fr; gap: 3rem; }
       .stats-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 1rem; text-align: center; }
-      #cursor, #cursor-ring { display: none; }
-      body { cursor: auto; }
-      a, button { cursor: auto; }
+      .feature-row { grid-template-columns: 1fr; gap: 2.5rem; }
+      .feature-row.flip { direction: ltr; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
     }
   </style>
 </head>
 <body>
-
-  <div id="cursor"></div>
-  <div id="cursor-ring"></div>
 
   <!-- NAV -->
   <nav>
@@ -680,30 +847,36 @@
       <li><a href="#services">Services</a></li>
       <li><a href="#process">Process</a></li>
       <li><a href="#pricing">Pricing</a></li>
-      <li><a href="#contact" class="nav-cta">Start a Project</a></li>
+      <li><a href="#studio">Studio</a></li>
     </ul>
+    <a href="#contact" class="nav-cta">Start a Project</a>
   </nav>
 
-  <!-- HERO — The Hook -->
+  <!-- HERO -->
   <section id="home" class="hero">
-    <div class="hero-eyebrow">
-      <span class="hero-dot"></span>
-      Now taking new projects
+    <div class="hero-text">
+      <div class="hero-eyebrow reveal">
+        <span class="hero-dot"></span>
+        Now taking new projects
+      </div>
+      <h1 class="reveal rd1">
+        Websites that<br>
+        make people<br>
+        <em>stop scrolling</em>
+      </h1>
+      <p class="hero-sub reveal rd2">We build custom websites for businesses that are serious about growing. No templates. No shortcuts. Just results.</p>
+      <div class="hero-btns reveal rd3">
+        <a href="#contact" class="btn-solid">Start Your Project</a>
+        <a href="#pricing" class="btn-border">See Pricing</a>
+      </div>
     </div>
-    <h1>
-      Websites that<br>
-      make people<br>
-      <em>stop scrolling</em>
-    </h1>
-    <p class="hero-sub">We build custom websites for businesses that are serious about growing. No templates. No shortcuts. Just results.</p>
-    <div class="hero-btns">
-      <a href="#pricing" class="btn-solid">Get Started</a>
-      <a href="#pricing" class="btn-border">See Pricing</a>
-    </div>
-    <div class="device-stack reveal">
-      <img class="d-left" src="images/mockup-phone.jpeg" alt="Mobile website" />
-      <img class="d-main" src="images/computer-hero.jpeg" alt="Website on screen" />
-      <img class="d-right" src="images/mockup-browsers.jpeg" alt="Browser mockups" />
+    <div class="hero-visual reveal rd2">
+      <div class="hero-img-main">
+        <img src="images/computer-hero.jpeg" alt="Website on screen" />
+      </div>
+      <div class="hero-img-float">
+        <img src="images/mockup-phone.jpeg" alt="Mobile website" />
+      </div>
     </div>
   </section>
 
@@ -729,26 +902,32 @@
     </div>
   </div>
 
-  <!-- CHAPTER 2 — The Problem -->
+  <!-- PROBLEM -->
   <div class="chapter-problem">
     <div class="ch-eyebrow reveal">The Reality</div>
     <h2 class="reveal">Most websites<br>are <em>losing</em> you<br>customers</h2>
     <p class="reveal">If your site looks outdated, loads slow, or doesn't work on mobile — people leave. And they don't come back.</p>
-    <div class="problem-grid reveal">
-      <div class="prob-card">
-        <div class="prob-num">01</div>
-        <h3>Looks unprofessional</h3>
-        <p>Customers judge your business in 3 seconds. A bad website tells them to go elsewhere.</p>
+    <div class="problem-grid">
+      <div class="prob-outer stagger" style="--i:0">
+        <div class="prob-card">
+          <div class="prob-num">01</div>
+          <h3>Looks unprofessional</h3>
+          <p>Customers judge your business in 3 seconds. A bad website tells them to go elsewhere.</p>
+        </div>
       </div>
-      <div class="prob-card">
-        <div class="prob-num">02</div>
-        <h3>Doesn't work on mobile</h3>
-        <p>Over 70% of visitors are on their phone. If your site breaks, so does your business.</p>
+      <div class="prob-outer stagger" style="--i:1">
+        <div class="prob-card">
+          <div class="prob-num">02</div>
+          <h3>Doesn't work on mobile</h3>
+          <p>Over 70% of visitors are on their phone. If your site breaks, so does your business.</p>
+        </div>
       </div>
-      <div class="prob-card">
-        <div class="prob-num">03</div>
-        <h3>Zero calls to action</h3>
-        <p>Visitors come, look around, and leave. No system to capture them, contact them, or convert them.</p>
+      <div class="prob-outer stagger" style="--i:2">
+        <div class="prob-card">
+          <div class="prob-num">03</div>
+          <h3>Zero calls to action</h3>
+          <p>Visitors come, look around, and leave. No system to capture them, contact them, or convert them.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -771,7 +950,7 @@
     </div>
   </div>
 
-  <!-- CHAPTER 3 — The Solution -->
+  <!-- SERVICES -->
   <section id="services">
     <div class="section-header reveal">
       <div class="ch-eyebrow" style="margin-bottom:1rem;">The Solution</div>
@@ -824,23 +1003,23 @@
         <h2>From idea to live<br>in days, not months</h2>
         <p>We keep it simple. You focus on your business — we handle everything else.</p>
       </div>
-      <div class="process-steps reveal">
-        <div class="p-step">
+      <div class="process-steps">
+        <div class="p-step stagger" style="--i:0">
           <div class="p-num">01</div>
           <h3>You Tell Us</h3>
           <p>Share your business and what you need. No jargon, no long forms — just a real conversation.</p>
         </div>
-        <div class="p-step">
+        <div class="p-step stagger" style="--i:1">
           <div class="p-num">02</div>
           <h3>We Design</h3>
           <p>Custom design for your brand. You see a full preview before we write a single line of code.</p>
         </div>
-        <div class="p-step">
+        <div class="p-step stagger" style="--i:2">
           <div class="p-num">03</div>
           <h3>We Build</h3>
           <p>Fast, clean, mobile-ready. Real code — not templates. Built to grow with your business.</p>
         </div>
-        <div class="p-step">
+        <div class="p-step stagger" style="--i:3">
           <div class="p-num">04</div>
           <h3>You Go Live</h3>
           <p>We handle domain, hosting, and launch. You start getting customers from day one.</p>
@@ -849,75 +1028,97 @@
     </div>
   </section>
 
-  <!-- PRICING -->
-  <section id="pricing">
+  <!-- PRICING — zoom-through (design C) -->
+  <section class="zt-pin" id="pricing" style="--zt-img:url('images/pricing-reveal.jpeg')">
+    <div class="zt-stage">
+      <div class="zt-img" aria-hidden="true"></div>
+      <div class="zt-meta">
+        <div class="zt-eyebrow">Web Design</div>
+      </div>
+      <div class="zt-mark">Websites</div>
+      <div class="zt-sub">
+        <p>Simple pricing. No surprises.</p>
+        <a class="zt-scrollcue" href="#pricing-plans">Scroll &darr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING PLANS -->
+  <section id="pricing-plans">
     <div style="max-width:1200px; margin:0 auto;">
       <div class="section-header reveal">
-        <div class="ch-eyebrow" style="margin-bottom:1rem;">Pricing</div>
-        <h2>Simple pricing.<br>No surprises.</h2>
-        <p>You know exactly what you're getting before we start.</p>
+        <div class="ch-eyebrow" style="margin-bottom:1rem;">Plans</div>
+        <h2>You know exactly<br>what you're getting.</h2>
+        <p>No hidden fees, no runaround. Pick what fits — we start the moment you do.</p>
       </div>
 
       <div class="pricing-toggle reveal">
-        <button class="toggle-btn active" onclick="switchPricing(this, 'projects')">One-Time Projects</button>
-        <button class="toggle-btn" onclick="switchPricing(this, 'monthly')">Monthly Plans</button>
+        <button class="toggle-btn active" onclick="switchPricing(this, 'projects')">Website Projects</button>
+        <button class="toggle-btn" onclick="switchPricing(this, 'monthly')">Managed Marketing</button>
       </div>
 
       <!-- ONE-TIME PROJECTS -->
       <div class="pricing-view active" id="view-projects">
         <div class="pricing-cards-4">
-          <div class="p-card reveal">
-            <div class="p-tier">Starter</div>
-            <div class="p-price">$799</div>
-            <div class="p-desc">A sharp landing page to get your business online and converting fast.</div>
-            <ul class="p-list">
-              <li><span class="p-check">+</span> 1-page landing page</li>
-              <li><span class="p-check">+</span> Mobile responsive</li>
-              <li><span class="p-check">+</span> Contact form</li>
-              <li><span class="p-check">+</span> 3 revisions</li>
-              <li><span class="p-check">+</span> Delivered in 5 days</li>
-            </ul>
-            <a href="https://buy.stripe.com/test_00w4gz9ZCfYQ2lvgnT3Nm00" class="p-btn p-btn-black">Buy Now</a>
+          <div class="p-card-outer reveal">
+            <div class="p-card">
+              <div class="p-tier">Starter</div>
+              <div class="p-price">$799</div>
+              <div class="p-desc">A sharp landing page to get your business online and converting fast.</div>
+              <ul class="p-list">
+                <li><span class="p-check">+</span> 1-page landing page</li>
+                <li><span class="p-check">+</span> Mobile responsive</li>
+                <li><span class="p-check">+</span> Contact form</li>
+                <li><span class="p-check">+</span> 3 revisions</li>
+                <li><span class="p-check">+</span> Delivered in 5 days</li>
+              </ul>
+              <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+            </div>
           </div>
-          <div class="p-card featured reveal rd1">
+          <div class="p-card-outer featured reveal rd1">
             <div class="p-badge">Most Popular</div>
-            <div class="p-tier">Professional</div>
-            <div class="p-price">$1,499</div>
-            <div class="p-desc">A full website with booking or contact system, multiple pages, ready to grow.</div>
-            <ul class="p-list">
-              <li><span class="p-check">+</span> Up to 5 pages</li>
-              <li><span class="p-check">+</span> Booking or contact system</li>
-              <li><span class="p-check">+</span> Admin dashboard</li>
-              <li><span class="p-check">+</span> Unlimited revisions</li>
-              <li><span class="p-check">+</span> Delivered in 7 days</li>
-            </ul>
-            <a href="https://buy.stripe.com/test_00w00j7Ru7sk1hrgnT3Nm04" class="p-btn p-btn-orange">Buy Now</a>
+            <div class="p-card">
+              <div class="p-tier">Professional</div>
+              <div class="p-price">$1,499</div>
+              <div class="p-desc">A full website with booking or contact system, multiple pages, ready to grow.</div>
+              <ul class="p-list">
+                <li><span class="p-check">+</span> Up to 5 pages</li>
+                <li><span class="p-check">+</span> Booking or contact system</li>
+                <li><span class="p-check">+</span> Admin dashboard</li>
+                <li><span class="p-check">+</span> Unlimited revisions</li>
+                <li><span class="p-check">+</span> Delivered in 7 days</li>
+              </ul>
+              <a href="#contact" class="p-btn p-btn-orange">Get Started</a>
+            </div>
           </div>
-          <div class="p-card reveal rd2">
-            <div class="p-tier">Business</div>
-            <div class="p-price">$2,499</div>
-            <div class="p-desc">A powerful multi-page site with e-commerce, integrations, and analytics built in.</div>
-            <ul class="p-list">
-              <li><span class="p-check">+</span> Up to 10 pages</li>
-              <li><span class="p-check">+</span> E-commerce with payments</li>
-              <li><span class="p-check">+</span> Custom integrations</li>
-              <li><span class="p-check">+</span> Analytics dashboard</li>
-              <li><span class="p-check">+</span> Delivered in 14 days</li>
-            </ul>
-            <a href="https://buy.stripe.com/test_28E00jc7KaEwbW55Jf3Nm05" class="p-btn p-btn-black">Buy Now</a>
+          <div class="p-card-outer reveal rd2">
+            <div class="p-card">
+              <div class="p-tier">Business</div>
+              <div class="p-price">$2,499</div>
+              <div class="p-desc">A powerful multi-page site with e-commerce, integrations, and analytics built in.</div>
+              <ul class="p-list">
+                <li><span class="p-check">+</span> Up to 10 pages</li>
+                <li><span class="p-check">+</span> E-commerce with payments</li>
+                <li><span class="p-check">+</span> Custom integrations</li>
+                <li><span class="p-check">+</span> Analytics dashboard</li>
+                <li><span class="p-check">+</span> Delivered in 14 days</li>
+              </ul>
+              <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+            </div>
           </div>
-          <div class="p-card reveal rd3">
-            <div class="p-tier">Enterprise</div>
-            <div class="p-price" style="font-size:2rem; letter-spacing:-0.02em; line-height:1.1;">Let's<br>Talk</div>
-            <div class="p-desc">Large-scale projects — web apps, portals, SaaS platforms, and beyond.</div>
-            <ul class="p-list">
-              <li><span class="p-check">+</span> Large-scale projects</li>
-              <li><span class="p-check">+</span> Web apps, portals, SaaS</li>
-              <li><span class="p-check">+</span> Dedicated team</li>
-              <li><span class="p-check">+</span> Timeline by scope</li>
-            </ul>
-            <a href="#contact" class="p-btn p-btn-border">Contact Us</a>
-
+          <div class="p-card-outer reveal rd3">
+            <div class="p-card">
+              <div class="p-tier">Enterprise</div>
+              <div class="p-price" style="font-size:2rem; letter-spacing:-0.02em; line-height:1.1;">Let's<br>Talk</div>
+              <div class="p-desc">Large-scale projects — web apps, portals, SaaS platforms, and beyond.</div>
+              <ul class="p-list">
+                <li><span class="p-check">+</span> Large-scale projects</li>
+                <li><span class="p-check">+</span> Web apps, portals, SaaS</li>
+                <li><span class="p-check">+</span> Dedicated team</li>
+                <li><span class="p-check">+</span> Timeline by scope</li>
+              </ul>
+              <a href="#contact" class="p-btn p-btn-border">Contact Us</a>
+            </div>
           </div>
         </div>
       </div>
@@ -925,81 +1126,178 @@
       <!-- MONTHLY PLANS -->
       <div class="pricing-view" id="view-monthly">
         <div class="pricing-cards">
-          <div class="p-card reveal">
-            <div class="p-tier">Essential</div>
-            <div class="p-price">$49.99<small>/mo</small></div>
-            <div class="p-desc">Everything you need to keep your site fast, secure, and up to date.</div>
-            <ul class="p-list">
-              <li><span class="p-check">+</span> Hosting included</li>
-              <li><span class="p-check">+</span> Content updates (up to 2/mo)</li>
-              <li><span class="p-check">+</span> Email support</li>
-              <li><span class="p-check">+</span> Uptime monitoring</li>
-            </ul>
-            <a href="https://buy.stripe.com/test_cNi7sL2xa5kc5xHdbH3Nm03" class="p-btn p-btn-black">Buy Now</a>
-            <p class="p-cancel">Cancel anytime. No contracts.</p>
+          <div class="p-card-outer reveal">
+            <div class="p-card">
+              <div class="p-tier">Presence</div>
+              <div class="p-price">$397<small>/mo</small></div>
+              <div class="p-desc">We run your online presence so customers find you and book — you do nothing.</div>
+              <ul class="p-list">
+                <li><span class="p-check">+</span> Google Business Profile managed</li>
+                <li><span class="p-check">+</span> Review system (more 5-star reviews)</li>
+                <li><span class="p-check">+</span> 4 posts/month</li>
+                <li><span class="p-check">+</span> Website hosting + updates</li>
+                <li><span class="p-check">+</span> Monthly performance report</li>
+              </ul>
+              <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+              <p class="p-cancel">Cancel anytime. No contracts.</p>
+            </div>
           </div>
-          <div class="p-card featured reveal rd1">
+          <div class="p-card-outer featured reveal rd1">
             <div class="p-badge">Most Popular</div>
-            <div class="p-tier">Growth</div>
-            <div class="p-price">$99.99<small>/mo</small></div>
-            <div class="p-desc">Active support and growth tools for businesses that are scaling.</div>
-            <ul class="p-list">
-              <li><span class="p-check">+</span> Everything in Basic</li>
-              <li><span class="p-check">+</span> Unlimited content updates</li>
-              <li><span class="p-check">+</span> Basic monthly SEO</li>
-              <li><span class="p-check">+</span> Monthly analytics report</li>
-              <li><span class="p-check">+</span> Priority support</li>
-            </ul>
-            <a href="https://buy.stripe.com/test_3cIcN5fjW5kc8JT6Nj3Nm02" class="p-btn p-btn-orange">Buy Now</a>
-            <p class="p-cancel">Cancel anytime. No contracts.</p>
+            <div class="p-card">
+              <div class="p-tier">Growth</div>
+              <div class="p-price">$697<small>/mo</small></div>
+              <div class="p-desc">Everything handled, plus active local SEO and content to bring in more bookings.</div>
+              <ul class="p-list">
+                <li><span class="p-check">+</span> Everything in Presence</li>
+                <li><span class="p-check">+</span> Local SEO (rank higher on Google)</li>
+                <li><span class="p-check">+</span> 8 social posts/month</li>
+                <li><span class="p-check">+</span> 1 promo creative/month</li>
+                <li><span class="p-check">+</span> Priority support</li>
+              </ul>
+              <a href="#contact" class="p-btn p-btn-orange">Get Started</a>
+              <p class="p-cancel">Cancel anytime. No contracts.</p>
+            </div>
           </div>
-          <div class="p-card reveal rd2">
-            <div class="p-tier">Business</div>
-            <div class="p-price">$299.99<small>/mo</small></div>
-            <div class="p-desc">Full-service digital partner for agencies and high-growth businesses.</div>
-            <ul class="p-list">
-              <li><span class="p-check">+</span> Everything in Growth</li>
-              <li><span class="p-check">+</span> New landing page per month</li>
-              <li><span class="p-check">+</span> Email campaigns</li>
-              <li><span class="p-check">+</span> A/B testing</li>
-              <li><span class="p-check">+</span> Dedicated account manager</li>
-            </ul>
-            <a href="https://buy.stripe.com/test_8x24gz5JmbIA0dn2x33Nm01" class="p-btn p-btn-black">Buy Now</a>
-            <p class="p-cancel">Cancel anytime. No contracts.</p>
+          <div class="p-card-outer reveal rd2">
+            <div class="p-card">
+              <div class="p-tier">Full Service</div>
+              <div class="p-price">$1,197<small>/mo</small></div>
+              <div class="p-desc">Your complete marketing team — paid ads, video, and a fresh landing page every month.</div>
+              <ul class="p-list">
+                <li><span class="p-check">+</span> Everything in Growth</li>
+                <li><span class="p-check">+</span> Paid ads managed (Google / Meta)</li>
+                <li><span class="p-check">+</span> New landing page every month</li>
+                <li><span class="p-check">+</span> Video / UGC creative</li>
+                <li><span class="p-check">+</span> Dedicated strategy</li>
+              </ul>
+              <a href="#contact" class="p-btn p-btn-black">Get Started</a>
+              <p class="p-cancel">Cancel anytime. No contracts.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CHAPTER 4 — CTA -->
+  <!-- WEBBSITE STUDIO — zoom-through (design C) -->
+  <section class="zt-pin" id="studio" style="--zt-img:url('images/studio-reveal.jpeg')">
+    <div class="zt-stage">
+      <div class="zt-img" aria-hidden="true"></div>
+      <div class="zt-meta">
+        <div class="zt-eyebrow">WEBBSITE Studio</div>
+      </div>
+      <div class="zt-mark">Studio</div>
+      <div class="zt-sub">
+        <p>Tu contenido. Editado. Listo para postear.</p>
+        <a class="zt-scrollcue" href="#studio-plans">Scroll &darr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDIO PLANS -->
+  <section id="studio-plans" class="studio-plans">
+    <div class="studio-inner">
+      <div class="studio-plans-head reveal">
+        <div class="ch-eyebrow">The Studio</div>
+        <h2>Tú grabas. Nosotros editamos.</h2>
+        <p class="studio-desc">Captions, cortes, música y tu logo en cada clip — contenido listo para Instagram, TikTok, Reels y YouTube Shorts. Cada semana, sin que muevas un dedo.</p>
+      </div>
+
+      <div class="studio-cards">
+        <!-- Starter -->
+        <div class="s-card-outer stagger" style="--i:0">
+          <div class="s-card">
+            <div class="s-tier">Starter</div>
+            <div class="s-price">$299<small>/mes</small></div>
+            <div class="s-desc">Contenido constante para mantener tus redes activas — sin que muevas un dedo.</div>
+            <ul class="s-list">
+              <li><span class="s-check">+</span> 8 videos editados al mes</li>
+              <li><span class="s-check">+</span> Captions automáticos</li>
+              <li><span class="s-check">+</span> Cortes dinámicos + música</li>
+              <li><span class="s-check">+</span> Tu logo en cada video</li>
+            </ul>
+            <a href="#contact" class="s-btn s-btn-light">Get Started</a>
+          </div>
+        </div>
+
+        <!-- Growth (featured) -->
+        <div class="s-card-outer featured stagger" style="--i:1">
+          <div class="s-badge">Most Popular</div>
+          <div class="s-card">
+            <div class="s-tier">Growth</div>
+            <div class="s-price">$499<small>/mes</small></div>
+            <div class="s-desc">Más volumen y todo lo que necesitas para que cada post rinda al máximo.</div>
+            <ul class="s-list">
+              <li><span class="s-check">+</span> 20 videos editados al mes</li>
+              <li><span class="s-check">+</span> Thumbnails personalizados</li>
+              <li><span class="s-check">+</span> Copy listo para cada post</li>
+              <li><span class="s-check">+</span> Captions, cortes, música + logo</li>
+            </ul>
+            <a href="#contact" class="s-btn s-btn-orange">Get Started</a>
+          </div>
+        </div>
+
+        <!-- Pro -->
+        <div class="s-card-outer stagger" style="--i:2">
+          <div class="s-card">
+            <div class="s-tier">Pro</div>
+            <div class="s-price">$799<small>/mes</small></div>
+            <div class="s-desc">Tu equipo de contenido completo — volumen ilimitado y estrategia incluida.</div>
+            <ul class="s-list">
+              <li><span class="s-check">+</span> Videos ilimitados</li>
+              <li><span class="s-check">+</span> Estrategia de contenido</li>
+              <li><span class="s-check">+</span> Todo lo de Growth incluido</li>
+              <li><span class="s-check">+</span> Soporte prioritario</li>
+            </ul>
+            <a href="#contact" class="s-btn s-btn-light">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
   <section id="contact">
     <div class="contact-wrap">
       <div class="reveal">
         <div class="ch-eyebrow" style="margin-bottom:1rem;">Let's Build</div>
         <div class="c-big">Ready to get a<br>website that<br><em>actually works?</em></div>
         <p class="c-sub">Tell us about your business. We'll get back within 24 hours with a clear plan and a price. No sales calls, no runaround.</p>
-        <div class="c-item"><span class="c-dot"></span> hello@webbsite.com</div>
+        <div class="c-item"><span class="c-dot"></span> webbsite.us@gmail.com</div>
         <div class="c-item"><span class="c-dot"></span> +1 (305) 000-0000</div>
         <div class="c-item"><span class="c-dot"></span> Response within 24 hours</div>
       </div>
-      <form class="c-form reveal rd1" action="https://formspree.io/f/meevavbr" method="POST">
-        <label class="c-label">Your Name</label>
-        <input class="c-input" type="text" name="name" placeholder="John Smith" required />
-        <label class="c-label">Email</label>
-        <input class="c-input" type="email" name="email" placeholder="john@yourbusiness.com" required />
-        <label class="c-label">What do you need?</label>
-        <select class="c-select" name="package">
-          <option value="">Select a package...</option>
-          <option>Starter — $799</option>
-          <option>Professional — $1,499</option>
-          <option>Business — $2,499</option>
-          <option>Custom — Let's Talk</option>
-        </select>
-        <label class="c-label">About your business</label>
-        <textarea class="c-textarea" name="message" placeholder="What does your business do? Any specific features you need?"></textarea>
-        <button type="submit" class="c-btn">Send Message</button>
-      </form>
+      <div class="reveal rd1">
+        <div class="c-form-outer">
+          <form class="c-form" id="contact-form">
+            <label class="c-label">Your Name</label>
+            <input class="c-input" type="text" name="name" placeholder="John Smith" required />
+            <label class="c-label">Email</label>
+            <input class="c-input" type="email" name="email" placeholder="john@yourbusiness.com" required />
+            <label class="c-label">What do you need?</label>
+            <select class="c-select" name="package">
+              <option value="">Select a package...</option>
+              <optgroup label="Website Projects (one-time)">
+                <option>Starter — $799</option>
+                <option>Professional — $1,499</option>
+                <option>Business — $2,499</option>
+                <option>Enterprise — Let's Talk</option>
+              </optgroup>
+              <optgroup label="Managed Marketing (monthly)">
+                <option>Presence — $397/mo</option>
+                <option>Growth — $697/mo</option>
+                <option>Full Service — $1,197/mo</option>
+              </optgroup>
+            </select>
+            <label class="c-label">About your business</label>
+            <textarea class="c-textarea" name="message" placeholder="What does your business do? Any specific features you need?"></textarea>
+            <button class="c-btn" type="submit" id="c-submit">Send Message</button>
+            <p id="form-success" style="display:none;color:#E8720C;font-size:0.8rem;font-weight:600;margin-top:1rem;letter-spacing:0.05em;">Message sent — we'll be in touch within 24 hours.</p>
+            <p id="form-error" style="display:none;color:#ff4444;font-size:0.8rem;font-weight:600;margin-top:1rem;">Something went wrong. Try again or email us directly.</p>
+          </form>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1009,34 +1307,45 @@
     <p>&copy; 2026 WEBBSITE. All rights reserved.</p>
   </footer>
 
-  <script>
-    // Cursor
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursor-ring');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-    });
-    (function loop() {
-      rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
-      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-      requestAnimationFrame(loop);
-    })();
-    document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        cursor.style.width = '18px'; cursor.style.height = '18px';
-        ring.style.width = '54px'; ring.style.height = '54px';
-        ring.style.borderColor = 'var(--orange)';
-      });
-      el.addEventListener('mouseleave', () => {
-        cursor.style.width = '10px'; cursor.style.height = '10px';
-        ring.style.width = '36px'; ring.style.height = '36px';
-        ring.style.borderColor = 'rgba(255,140,0,0.45)';
-      });
-    });
+  <!-- Lenis via CDN (smooth-scroll.md) -->
+  <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
 
-    // Pricing toggle
+  <script>
+    // Lenis init — antes que cualquier otra cosa (smooth-scroll.md: orden correcto)
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        smoothTouch: false,
+      });
+
+      // Lenis ↔ GSAP ScrollTrigger (prueba-c-wordmark: misma integración)
+      gsap.registerPlugin(ScrollTrigger);
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+
+      // Anchor links con scroll suave (smooth-scroll.md)
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: -80 }); }
+        });
+      });
+
+      // Zoom-through (diseño C): por cada .zt-pin, el wordmark relleno de imagen
+      // crece hasta llenar la pantalla y se disuelve en la imagen completa
+      document.querySelectorAll('.zt-pin').forEach((pin) => {
+        gsap.timeline({ scrollTrigger: { trigger: pin, start: 'top top', end: 'bottom bottom', scrub: 1 } })
+          .to(pin.querySelector('.zt-meta'), { opacity: 0, y: -40, ease: 'power2.in' }, 0)
+          .to(pin.querySelector('.zt-sub'),  { opacity: 0, y: 40, ease: 'power1.in' }, 0)
+          .to(pin.querySelector('.zt-mark'), { scale: 14, ease: 'power2.in', duration: 0.8 }, 0)
+          .to(pin.querySelector('.zt-img'),  { opacity: 1, scale: 1, ease: 'power2.out', duration: 0.55 }, 0.45)
+          .to(pin.querySelector('.zt-mark'), { opacity: 0, duration: 0.3, ease: 'power2.out' }, 0.72);
+      });
+    }
+
     function switchPricing(btn, type) {
       document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.pricing-view').forEach(v => v.classList.remove('active'));
@@ -1044,11 +1353,44 @@
       document.getElementById('view-' + type).classList.add('active');
     }
 
-    // Scroll reveal
     const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    document.querySelectorAll('.reveal, .stagger').forEach(el => obs.observe(el));
+
+    // Contact form — replace YOUR_FORM_ID with the ID from formspree.io
+    const contactForm = document.getElementById('contact-form');
+    contactForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('c-submit');
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      try {
+        const res = await fetch('https://formspree.io/f/meevavbr', {
+          method: 'POST',
+          body: new FormData(contactForm),
+          headers: { Accept: 'application/json' }
+        });
+        if (res.ok) {
+          contactForm.reset();
+          document.getElementById('form-success').style.display = 'block';
+          document.getElementById('form-error').style.display = 'none';
+          btn.textContent = 'Sent!';
+        } else {
+          throw new Error();
+        }
+      } catch {
+        document.getElementById('form-error').style.display = 'block';
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+      }
+    });
   </script>
 
 </body>

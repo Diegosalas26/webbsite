@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iron Shark Rentals — Miami Water Sports &amp; Yacht Charters FL</title>
+  <meta name="description" content="Miami's #1 water sport company. Jet skis, ATVs &amp; 60+ yachts for charter. Captain &amp; fuel included. Book directly online with Stripe." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:  #060E08;
+      --dark:    #0A1A0D;
+      --green:   #152C1A;
+      --surf:    rgba(255,255,255,.04);
+      --surf2:   rgba(255,255,255,.07);
+      --gold:    #C9A52A;
+      --gold2:   #E8C44A;
+      --gbg:     rgba(201,165,42,.08);
+      --gbrd:    rgba(201,165,42,.13);
+      --gbrdh:   rgba(201,165,42,.35);
+      --white:   #FFFFFF;
+      --text:    #E2DDD4;
+      --muted:   rgba(255,255,255,.42);
+      --muted2:  rgba(255,255,255,.22);
+      --r:       18px;
+      --ease:    cubic-bezier(0.16,1,0.3,1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--forest);
+      color: var(--white);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CURSOR ── */
+    #cursor {
+      position: fixed; width: 10px; height: 10px;
+      background: var(--gold); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .2s var(--ease), height .2s var(--ease);
+    }
+    #cursor-ring {
+      position: fixed; width: 38px; height: 38px;
+      border: 1.5px solid rgba(201,165,42,.38); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: width .3s var(--ease), height .3s var(--ease), border-color .3s;
+    }
+    a, button { cursor: none; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(6,14,8,.92);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border-bottom: 1px solid rgba(201,165,42,.09);
+      transition: padding .35s var(--ease), background .35s;
+    }
+    nav.scrolled { padding: .75rem 3rem; background: rgba(6,14,8,.97); }
+
+    .nav-logo { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
+    .nav-logo-icon { width: 34px; height: 34px; flex-shrink: 0; }
+    .nav-logo-main { font-size: 1.35rem; font-weight: 700; letter-spacing: -.045em; color: var(--white); line-height: 1; }
+    .nav-logo-sub { font-size: .57rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-top: .12rem; }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+    .nav-links a { color: var(--muted2); text-decoration: none; font-size: .82rem; font-weight: 500; letter-spacing: .04em; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta { background: var(--gold) !important; color: var(--forest) !important; padding: .5rem 1.35rem; border-radius: 100px; font-weight: 700 !important; letter-spacing: .02em !important; }
+    .nav-cta:hover { opacity: .85 !important; color: var(--forest) !important; }
+
+    .nav-burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
+    .nav-burger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: all .3s var(--ease); }
+    .nav-burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 490;
+      background: rgba(6,14,8,.97); backdrop-filter: blur(28px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+      opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+    }
+    .mobile-menu.open { opacity: 1; pointer-events: all; }
+    .mobile-menu a { font-size: 2.4rem; font-weight: 700; color: var(--white); text-decoration: none; letter-spacing: -.05em; transition: color .2s; }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mm-cta { background: var(--gold) !important; color: var(--forest) !important; padding: .9rem 3rem; border-radius: 100px; font-size: 1.1rem !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 10rem 2rem 8rem;
+      position: relative; overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(6,14,8,.72) 0%, rgba(6,14,8,.80) 55%, var(--forest) 100%),
+        url('images/hero-yacht.jpeg') center 65% / cover no-repeat;
+    }
+
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); pointer-events: none;
+    }
+    .blob-1 {
+      width: 700px; height: 700px; top: -180px; left: -200px;
+      background: radial-gradient(circle, rgba(20,130,55,.5) 0%, transparent 70%);
+      opacity: .08; animation: b1 20s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 550px; height: 550px; top: 25%; right: -150px;
+      background: radial-gradient(circle, rgba(201,165,42,.6) 0%, transparent 70%);
+      opacity: .05; animation: b2 26s ease-in-out infinite;
+    }
+    .blob-3 {
+      width: 450px; height: 450px; bottom: 0; left: 38%;
+      background: radial-gradient(circle, rgba(8,50,20,.8) 0%, transparent 70%);
+      opacity: .14; animation: b3 18s ease-in-out infinite;
+    }
+    @keyframes b1 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(70px,50px)} 66%{transform:translate(-35px,80px)} }
+    @keyframes b2 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-60px,70px)} 66%{transform:translate(40px,-50px)} }
+    @keyframes b3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-50px,-70px)} }
+
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(201,165,42,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,165,42,.03) 1px, transparent 1px);
+      background-size: 66px 66px;
+      -webkit-mask-image: radial-gradient(ellipse 75% 80% at 50% 40%, black 25%, transparent 100%);
+      mask-image: radial-gradient(ellipse 75% 80% at 50% 40%, black 25%, transparent 100%);
+    }
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .45rem 1.25rem; border-radius: 100px;
+      background: rgba(201,165,42,.08); border: 1px solid rgba(201,165,42,.2);
+      font-size: .68rem; font-weight: 700; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 2.25rem;
+    }
+    .hero-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: blink 2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+
+    .hero h1 {
+      font-size: clamp(3.4rem, 10vw, 10.5rem);
+      font-weight: 700; line-height: .88; letter-spacing: -.05em;
+      color: var(--white); margin-bottom: 2rem;
+    }
+    .hero h1 em { font-style: normal; color: var(--gold); }
+    .hero h1 .outline { -webkit-text-stroke: 1.5px rgba(255,255,255,.28); color: transparent; }
+
+    .hero-sub {
+      font-size: 1.05rem; color: rgba(255,255,255,.48);
+      max-width: 480px; margin: 0 auto 3rem; line-height: 1.78; font-weight: 400;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 5rem; }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #C9A52A 0%, #E8C44A 100%);
+      color: var(--forest); padding: .9rem 2.5rem; font-weight: 700; font-size: .88rem;
+      border-radius: 100px; text-decoration: none;
+      transition: opacity .2s, transform .3s var(--ease), box-shadow .3s; border: none;
+      font-family: 'Space Grotesk', sans-serif; letter-spacing: .025em;
+      box-shadow: 0 4px 24px rgba(201,165,42,.28);
+    }
+    .btn-gold:hover { opacity: .88; transform: translateY(-3px); box-shadow: 0 10px 36px rgba(201,165,42,.42); }
+
+    .btn-outline {
+      background: rgba(255,255,255,.04); color: rgba(255,255,255,.72);
+      border: 1px solid rgba(255,255,255,.14);
+      padding: .9rem 2.5rem; font-weight: 600; font-size: .88rem;
+      border-radius: 100px; text-decoration: none;
+      transition: border-color .2s, color .2s, background .2s, transform .3s var(--ease);
+      backdrop-filter: blur(8px);
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,165,42,.06); transform: translateY(-3px); }
+
+    .hero-stats {
+      display: inline-flex; gap: 0; justify-content: center; flex-wrap: wrap;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 100px; padding: .45rem;
+    }
+    .h-stat { padding: .7rem 2rem; text-align: center; border-radius: 100px; transition: background .25s; }
+    .h-stat:hover { background: rgba(255,255,255,.05); }
+    .h-sep { width: 1px; background: rgba(255,255,255,.1); align-self: center; height: 24px; }
+    .h-stat-val { font-size: 1.85rem; font-weight: 700; letter-spacing: -.05em; color: var(--white); line-height: 1; }
+    .h-stat-val em { font-style: normal; color: var(--gold); }
+    .h-stat-lbl { font-size: .62rem; font-weight: 600; letter-spacing: .11em; text-transform: uppercase; color: rgba(255,255,255,.32); margin-top: .3rem; }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      overflow: hidden; padding: .9rem 0;
+      border-top: 1px solid rgba(201,165,42,.1);
+      border-bottom: 1px solid rgba(201,165,42,.1);
+      background: rgba(0,0,0,.42);
+    }
+    .marquee-track { display: flex; animation: mLeft 30s linear infinite; white-space: nowrap; width: max-content; }
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: 1.2rem;
+      padding: 0 1.8rem; font-size: .66rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.28);
+    }
+    .msep { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; flex-shrink: 0; opacity: .65; }
+    @keyframes mLeft { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+    /* ── SECTION SHARED ── */
+    .section-header { text-align: center; margin-bottom: 5rem; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .75rem;
+      font-size: .66rem; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 1.3rem;
+    }
+    .eyebrow::before, .eyebrow::after { content: ''; display: block; width: 28px; height: 1px; background: var(--gold); opacity: .45; }
+    .section-header h2 { font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 700; letter-spacing: -.047em; line-height: .93; color: var(--white); margin-bottom: 1.25rem; }
+    .section-header p { font-size: .93rem; color: var(--muted); max-width: 460px; margin: 0 auto; line-height: 1.78; }
+
+    /* ── CATEGORIES ── */
+    #categories { padding: 8rem 3rem; background: var(--forest); }
+
+    .cat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; max-width: 1100px; margin: 0 auto; }
+
+    .cat-card {
+      border: 1px solid rgba(255,255,255,.07); border-radius: var(--r);
+      padding: 2.25rem 2rem; background: var(--surf);
+      transition: border-color .35s var(--ease), background .35s, transform .4s var(--ease), box-shadow .35s;
+      position: relative; overflow: hidden;
+    }
+    .cat-card::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 20% 0%, rgba(201,165,42,.09) 0%, transparent 55%);
+      opacity: 0; transition: opacity .35s;
+    }
+    .cat-card:hover { border-color: rgba(201,165,42,.28); background: var(--surf2); transform: translateY(-5px); box-shadow: 0 20px 64px rgba(0,0,0,.38), 0 0 0 1px rgba(201,165,42,.07); }
+    .cat-card:hover::after { opacity: 1; }
+
+    .cat-num { font-size: .62rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); opacity: .45; margin-bottom: 1.25rem; }
+    .cat-icon { width: 40px; height: 40px; margin-bottom: 1.1rem; color: var(--gold); }
+    .cat-icon svg { width: 100%; height: 100%; }
+    .cat-card h3 { font-size: 1.18rem; font-weight: 700; letter-spacing: -.028em; color: var(--white); margin-bottom: .4rem; }
+    .cat-card p { font-size: .82rem; color: var(--muted); line-height: 1.67; margin-bottom: 1.5rem; }
+    .cat-from { font-size: .7rem; color: rgba(255,255,255,.3); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+    .cat-from strong { color: var(--gold); font-size: 1.05rem; letter-spacing: -.01em; }
+    .cat-arrow {
+      position: absolute; bottom: 1.75rem; right: 1.75rem;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(201,165,42,.08); border: 1px solid rgba(201,165,42,.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; color: var(--gold);
+      opacity: 0; transform: translate(-5px,5px);
+      transition: opacity .3s var(--ease), transform .3s var(--ease);
+    }
+    .cat-card:hover .cat-arrow { opacity: 1; transform: translate(0,0); }
+
+    /* ── FLEET ── */
+    #fleet { padding: 8rem 3rem; background: var(--dark); }
+
+    .fleet-filters { display: flex; gap: .4rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.75rem; }
+    .filter-btn {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+      color: var(--muted2); padding: .5rem 1.3rem; border-radius: 100px;
+      font-family: 'Space Grotesk', sans-serif; font-size: .78rem; font-weight: 600; letter-spacing: .04em;
+      transition: all .28s var(--ease); cursor: none;
+    }
+    .filter-btn:hover { color: var(--white); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.06); }
+    .filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--forest); box-shadow: 0 4px 18px rgba(201,165,42,.3); }
+
+    .fleet-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.4rem; max-width: 1200px; margin: 0 auto; }
+
+    .boat-card {
+      border: 1px solid rgba(255,255,255,.07); border-radius: var(--r); overflow: hidden;
+      background: var(--surf);
+      transition: border-color .35s var(--ease), transform .4s var(--ease), box-shadow .35s;
+      display: flex; flex-direction: column;
+    }
+    .boat-card:hover { border-color: rgba(201,165,42,.28); transform: translateY(-6px); box-shadow: 0 28px 80px rgba(0,0,0,.42); }
+
+    .boat-img-wrap { aspect-ratio: 16/10; overflow: hidden; position: relative; }
+    .boat-img-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, #0F3520 0%, #071A0C 60%, #030D06 100%);
+    }
+    .boat-img-shimmer {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 30%, rgba(201,165,42,.1) 0%, transparent 65%);
+    }
+    .boat-img-waves {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 55%;
+    }
+    .boat-img-waves svg { width: 100%; height: 100%; }
+    .boat-img-icon {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; opacity: .75;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,.6));
+    }
+    .boat-tag {
+      position: absolute; top: .8rem; left: .8rem;
+      background: linear-gradient(135deg, #C9A52A, #E8C44A); color: var(--forest);
+      font-size: .57rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      padding: .25rem .75rem; border-radius: 100px;
+    }
+    .boat-tag.premium { background: rgba(6,14,8,.7); color: var(--gold); border: 1px solid rgba(201,165,42,.35); backdrop-filter: blur(10px); }
+    .boat-price-badge {
+      position: absolute; bottom: .8rem; right: .8rem;
+      background: rgba(6,14,8,.8); backdrop-filter: blur(10px);
+      border: 1px solid rgba(201,165,42,.2); border-radius: 100px;
+      padding: .28rem .85rem;
+      font-size: .7rem; font-weight: 700; color: var(--gold); letter-spacing: .02em;
+    }
+
+    .boat-body { padding: 1.35rem; flex: 1; display: flex; flex-direction: column; }
+    .boat-name { font-size: 1.02rem; font-weight: 700; letter-spacing: -.025em; color: var(--white); margin-bottom: .35rem; }
+    .boat-meta { display: flex; gap: .85rem; margin-bottom: 1rem; font-size: .7rem; color: var(--muted2); font-weight: 500; }
+    .boat-meta span { display: flex; align-items: center; gap: .3rem; }
+
+    .boat-rates { margin-bottom: 1.1rem; flex: 1; }
+    .boat-rates-label { font-size: .58rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.23); margin-bottom: .5rem; }
+    .boat-rates-list { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .rate-pill {
+      background: var(--gbg); border: 1px solid var(--gbrd); color: var(--gold);
+      font-size: .67rem; font-weight: 600; padding: .28rem .7rem; border-radius: 100px;
+      transition: background .2s, border-color .2s;
+    }
+    .rate-pill:hover { background: rgba(201,165,42,.14); border-color: rgba(201,165,42,.25); }
+
+    .boat-includes { margin-bottom: 1.1rem; }
+    .boat-includes-label { font-size: .58rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.23); margin-bottom: .4rem; }
+    .boat-includes-list { font-size: .71rem; color: rgba(255,255,255,.33); line-height: 1.55; }
+
+    .book-btn {
+      display: block; width: 100%; text-align: center;
+      background: linear-gradient(135deg, #C9A52A 0%, #E8C44A 100%); color: var(--forest);
+      border: none; border-radius: 100px; padding: .82rem;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: .82rem; letter-spacing: .025em;
+      transition: opacity .2s, transform .3s var(--ease), box-shadow .3s;
+      box-shadow: 0 2px 14px rgba(201,165,42,.2);
+    }
+    .book-btn:hover { opacity: .88; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,165,42,.38); }
+
+    .hidden { display: none !important; }
+
+    /* ── HOW IT WORKS ── */
+    #how { padding: 8rem 3rem; background: var(--forest); border-top: 1px solid rgba(201,165,42,.06); }
+
+    .steps-wrap { max-width: 1100px; margin: 0 auto; position: relative; }
+    .steps-connector {
+      position: absolute; top: 27px; left: calc(12.5% + 28px); right: calc(12.5% + 28px);
+      height: 1px; z-index: 0;
+      background: linear-gradient(90deg, rgba(201,165,42,.15), rgba(201,165,42,.45) 50%, rgba(201,165,42,.15));
+    }
+    .steps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2.5rem; position: relative; z-index: 1; }
+    .step { text-align: center; }
+    .step-circle {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: var(--surf); border: 1px solid rgba(201,165,42,.2);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 2rem;
+      font-size: 1rem; font-weight: 700; color: var(--gold);
+      transition: background .3s var(--ease), border-color .3s, box-shadow .3s;
+    }
+    .step:hover .step-circle { background: rgba(201,165,42,.1); border-color: var(--gold); box-shadow: 0 0 28px rgba(201,165,42,.2); }
+    .step h3 { font-size: .95rem; font-weight: 700; color: var(--white); margin-bottom: .5rem; letter-spacing: -.015em; }
+    .step p { font-size: .82rem; color: var(--muted); line-height: 1.67; }
+
+    /* ── PERKS ── */
+    #perks { padding: 7rem 3rem; background: var(--dark); }
+    .perks-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; max-width: 1000px; margin: 0 auto; }
+    .perk {
+      padding: 2rem; border-radius: var(--r);
+      background: var(--surf); border: 1px solid rgba(255,255,255,.07);
+      transition: border-color .3s var(--ease), background .3s, transform .35s var(--ease);
+    }
+    .perk:hover { border-color: rgba(201,165,42,.2); background: var(--surf2); transform: translateY(-3px); }
+    .perk-icon-wrap {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--gbg); border: 1px solid rgba(201,165,42,.15);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem; color: var(--gold);
+    }
+    .perk-icon-wrap svg { width: 22px; height: 22px; }
+    .perk h4 { font-size: .9rem; font-weight: 700; color: var(--white); margin-bottom: .4rem; letter-spacing: -.015em; }
+    .perk p { font-size: .8rem; color: var(--muted); line-height: 1.67; }
+
+    /* ── CTA BAND ── */
+    .cta-band {
+      padding: 7rem 3rem; text-align: center;
+      position: relative; overflow: hidden;
+      background:
+        linear-gradient(rgba(6,14,8,.78), rgba(6,14,8,.78)),
+        url('images/section-yacht.jpeg') center / cover no-repeat;
+      border-top: 1px solid rgba(201,165,42,.1); border-bottom: 1px solid rgba(201,165,42,.1);
+    }
+    .cta-band::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,165,42,.07) 0%, transparent 70%);
+    }
+    .cta-band > * { position: relative; z-index: 1; }
+    .cta-band h2 { font-size: clamp(2.2rem, 5.5vw, 4.5rem); font-weight: 700; letter-spacing: -.047em; color: var(--white); margin-bottom: 1rem; }
+    .cta-band h2 em { font-style: normal; color: var(--gold); }
+    .cta-band p { font-size: .95rem; color: var(--muted); margin-bottom: 2.75rem; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+    /* ── CONTACT ── */
+    #contact { padding: 8rem 3rem; background: var(--forest); }
+    .contact-wrap { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .c-big { font-size: clamp(2rem,4vw,3.5rem); font-weight: 700; letter-spacing: -.047em; line-height: .93; color: var(--white); margin-bottom: 1.5rem; }
+    .c-big em { font-style: normal; color: var(--gold); }
+    .c-sub { font-size: .88rem; color: var(--muted); line-height: 1.8; margin-bottom: 2.25rem; }
+    .c-item { display: flex; align-items: center; gap: .85rem; font-size: .85rem; color: rgba(255,255,255,.42); margin-bottom: .85rem; }
+    .c-dot-wrap {
+      width: 30px; height: 30px; border-radius: 9px;
+      background: var(--gbg); border: 1px solid rgba(201,165,42,.16);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--gold);
+    }
+    .c-dot-wrap svg { width: 15px; height: 15px; }
+
+    .c-form { background: var(--surf); border: 1px solid var(--gbrd); border-radius: 20px; padding: 2.5rem; }
+    .c-label { display: block; font-size: .63rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: .42rem; }
+    .c-input, .c-select, .c-textarea {
+      width: 100%; background: rgba(0,0,0,.38); border: 1px solid rgba(255,255,255,.1); border-radius: 10px;
+      padding: .8rem 1rem; color: var(--white);
+      font-family: 'Space Grotesk', sans-serif; font-size: .88rem;
+      outline: none; transition: border-color .2s; margin-bottom: 1rem; -webkit-appearance: none;
+    }
+    .c-input:focus, .c-select:focus, .c-textarea:focus { border-color: var(--gold); }
+    .c-textarea { resize: vertical; min-height: 90px; }
+    .c-select option { background: var(--forest); }
+    .c-btn {
+      width: 100%; background: linear-gradient(135deg, #C9A52A 0%, #E8C44A 100%);
+      color: var(--forest); border: none; border-radius: 100px; padding: 1rem;
+      font-weight: 700; font-size: .88rem; font-family: 'Space Grotesk', sans-serif; letter-spacing: .025em;
+      transition: opacity .2s, transform .3s var(--ease), box-shadow .3s;
+      box-shadow: 0 4px 22px rgba(201,165,42,.26);
+    }
+    .c-btn:hover { opacity: .88; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,165,42,.38); }
+
+    /* ── FOOTER ── */
+    footer { background: #030A04; border-top: 1px solid rgba(255,255,255,.06); padding: 2.75rem 3rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+    .footer-brand { font-size: 1rem; font-weight: 700; color: var(--white); letter-spacing: -.025em; }
+    .footer-brand span { color: var(--gold); }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a { font-size: .76rem; color: rgba(255,255,255,.24); text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-right { text-align: right; }
+    .footer-copy { font-size: .74rem; color: rgba(255,255,255,.17); }
+    .footer-webbsite { font-size: .7rem; color: rgba(255,255,255,.16); margin-top: .25rem; }
+    .footer-webbsite a { color: rgba(201,165,42,.4); text-decoration: none; transition: color .2s; }
+    .footer-webbsite a:hover { color: var(--gold); }
+
+    /* ── BOOKING MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,.82); backdrop-filter: blur(14px);
+      display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+      opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: #0D1F14; border: 1px solid rgba(201,165,42,.17);
+      border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 520px;
+      max-height: 90vh; overflow-y: auto;
+      transform: translateY(28px) scale(.97); transition: transform .45s var(--ease);
+      scrollbar-width: thin; scrollbar-color: rgba(201,165,42,.2) transparent;
+      box-shadow: 0 48px 130px rgba(0,0,0,.65), 0 0 0 1px rgba(201,165,42,.06);
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; }
+    .modal-title { font-size: 1.3rem; font-weight: 700; letter-spacing: -.035em; color: var(--white); }
+    .modal-vessel { font-size: .74rem; color: var(--gold); font-weight: 600; margin-top: .35rem; letter-spacing: .02em; }
+    .modal-close {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
+      color: rgba(255,255,255,.42); border-radius: 50%; width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; flex-shrink: 0; margin-left: 1rem;
+      transition: background .2s, color .2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,.1); color: var(--white); }
+
+    .m-label { display: block; font-size: .62rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.27); margin-bottom: .42rem; }
+    .m-input, .m-select {
+      width: 100%; background: rgba(0,0,0,.42); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px; padding: .78rem 1rem; color: var(--white);
+      font-family: 'Space Grotesk', sans-serif; font-size: .88rem;
+      outline: none; transition: border-color .2s; margin-bottom: 1rem; -webkit-appearance: none;
+    }
+    .m-input:focus, .m-select:focus { border-color: var(--gold); }
+    .m-select option { background: #0D1F14; }
+    .m-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .duration-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem; margin-bottom: 1.1rem; }
+    .dur-btn {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
+      color: rgba(255,255,255,.44); border-radius: 12px;
+      padding: .7rem .5rem; text-align: center;
+      font-family: 'Space Grotesk', sans-serif; font-size: .78rem; font-weight: 600;
+      transition: all .22s var(--ease);
+    }
+    .dur-btn:hover { background: var(--gbg); border-color: rgba(201,165,42,.28); color: var(--gold); }
+    .dur-btn.selected { background: rgba(201,165,42,.14); border-color: var(--gold); color: var(--gold); }
+    .dur-btn .dur-price { display: block; font-size: .7rem; color: rgba(255,255,255,.33); font-weight: 400; margin-top: .15rem; }
+    .dur-btn.selected .dur-price { color: rgba(201,165,42,.62); }
+
+    .price-summary {
+      background: var(--gbg); border: 1px solid rgba(201,165,42,.15);
+      border-radius: 14px; padding: 1.1rem 1.3rem; margin-bottom: 1.3rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .ps-label { font-size: .7rem; color: var(--muted); font-weight: 500; }
+    .ps-price { font-size: 1.65rem; font-weight: 700; letter-spacing: -.04em; color: var(--gold); }
+
+    .stripe-btn {
+      width: 100%; background: linear-gradient(135deg, #C9A52A 0%, #E8C44A 100%);
+      color: var(--forest); border: none; border-radius: 100px; padding: 1rem;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: .88rem;
+      letter-spacing: .025em; transition: opacity .2s, transform .3s var(--ease), box-shadow .3s;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      box-shadow: 0 4px 22px rgba(201,165,42,.26);
+    }
+    .stripe-btn:hover { opacity: .88; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,165,42,.38); }
+    .stripe-btn:disabled { opacity: .45; transform: none; }
+    .stripe-note { text-align: center; font-size: .68rem; color: rgba(255,255,255,.2); margin-top: .85rem; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .rd1 { transition-delay: .1s; } .rd2 { transition-delay: .2s; } .rd3 { transition-delay: .3s; } .rd4 { transition-delay: .4s; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+      .mobile-menu { display: flex; }
+      .hero, #categories, #fleet, #how, #perks, #contact { padding: 5rem 1.5rem; }
+      .cta-band { padding: 4.5rem 1.5rem; }
+      .cat-grid, .perks-grid { grid-template-columns: 1fr 1fr; }
+      .fleet-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .steps-connector { display: none; }
+      .contact-wrap { grid-template-columns: 1fr; gap: 3rem; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+      .footer-right { text-align: center; }
+      .m-row { grid-template-columns: 1fr; }
+      .duration-grid { grid-template-columns: repeat(2,1fr); }
+      .hero-stats { border-radius: 20px; padding: .75rem; }
+      .h-sep { display: none; }
+      .h-stat { padding: .7rem 1.25rem; }
+      #cursor, #cursor-ring { display: none; }
+      body { cursor: auto; }
+      a, button { cursor: auto; }
+    }
+    @media (max-width: 480px) {
+      .cat-grid { grid-template-columns: 1fr; }
+      .perks-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ── MOBILE MENU ── -->
+<button class="nav-burger" id="burger" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#fleet" onclick="closeMobileMenu()">Fleet</a>
+  <a href="#how" onclick="closeMobileMenu()">How It Works</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  <a href="#fleet" class="mm-cta" onclick="closeMobileMenu()">Book Now</a>
+</div>
+
+<!-- ── BOOKING MODAL ── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Book Your Trip</div>
+        <div class="modal-vessel" id="modalVesselName">Select a vessel</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div id="modalDurationSection">
+      <label class="m-label">Select Duration</label>
+      <div class="duration-grid" id="durationGrid"></div>
+    </div>
+
+    <div class="price-summary">
+      <div>
+        <div class="ps-label">Total Price</div>
+        <div class="ps-label" id="modalDurLabel" style="margin-top:.2rem;color:rgba(255,255,255,.22);">—</div>
+      </div>
+      <div class="ps-price" id="modalPrice">$0</div>
+    </div>
+
+    <div class="m-row">
+      <div>
+        <label class="m-label">Date</label>
+        <input class="m-input" type="date" id="bookDate" />
+      </div>
+      <div>
+        <label class="m-label">Guests</label>
+        <input class="m-input" type="number" id="bookGuests" min="1" max="45" placeholder="e.g. 6" />
+      </div>
+    </div>
+
+    <label class="m-label">Your Name</label>
+    <input class="m-input" type="text" id="bookName" placeholder="Full name" />
+
+    <label class="m-label">Phone</label>
+    <input class="m-input" type="tel" id="bookPhone" placeholder="+1 (305) 000-0000" />
+
+    <label class="m-label">Email</label>
+    <input class="m-input" type="email" id="bookEmail" placeholder="you@email.com" />
+
+    <button class="stripe-btn" id="checkoutBtn" onclick="handleCheckout()">
+      <span>Pay Securely with Stripe</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </button>
+    <div class="stripe-note">🔒 Secure payment · SSL encrypted · Powered by Stripe</div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav id="mainNav">
+  <a href="#home" class="nav-logo">
+    <svg class="nav-logo-icon" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="34" height="34" rx="10" fill="rgba(201,165,42,.1)"/>
+      <path d="M6 22 C8 14 13 12 17 14 C21 16 24 12 28 10 L26 20 C24 22 20 23 17 21 C14 19 10 22 6 24 Z" fill="#C9A52A" opacity=".9"/>
+      <path d="M17 10 L19 7 L22 9 L20 11 Z" fill="#E8C44A" opacity=".7"/>
+      <circle cx="17" cy="17" r="2.5" fill="none" stroke="#C9A52A" stroke-width="1.2" opacity=".5"/>
+    </svg>
+    <div>
+      <div class="nav-logo-main">IRON SHARK</div>
+      <div class="nav-logo-sub">Water Sport · Miami FL</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#fleet">Fleet</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#fleet" class="nav-cta">Book Now</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="home" class="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-eyebrow">
+    <span class="hero-dot"></span>
+    Open 7 Days a Week · Miami, FL
+  </div>
+
+  <h1>
+    Full of<br>
+    <em>Adrenaline</em><br>
+    <span class="outline">Experience</span>
+  </h1>
+
+  <p class="hero-sub">Miami's premier water sport company. Jet skis, ATVs, and a fleet of 60+ yachts available for charter — captained, fueled, and ready to go.</p>
+
+  <div class="hero-btns">
+    <a href="#fleet" class="btn-gold">Browse Our Fleet</a>
+    <a href="https://www.instagram.com/iron_shark305" target="_blank" rel="noopener" class="btn-outline">@iron_shark305</a>
+  </div>
+
+  <div class="hero-stats reveal">
+    <div class="h-stat">
+      <div class="h-stat-val">60<em>+</em></div>
+      <div class="h-stat-lbl">Vessels</div>
+    </div>
+    <div class="h-sep"></div>
+    <div class="h-stat">
+      <div class="h-stat-val">45<em>max</em></div>
+      <div class="h-stat-lbl">Guests</div>
+    </div>
+    <div class="h-sep"></div>
+    <div class="h-stat">
+      <div class="h-stat-val">7</div>
+      <div class="h-stat-lbl">Days / Week</div>
+    </div>
+    <div class="h-sep"></div>
+    <div class="h-stat">
+      <div class="h-stat-val"><em>$</em>80</div>
+      <div class="h-stat-lbl">Starts From</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Jet Ski Rentals <span class="msep"></span></span>
+    <span class="marquee-item">Yacht Charters <span class="msep"></span></span>
+    <span class="marquee-item">ATV &amp; UTV Adventures <span class="msep"></span></span>
+    <span class="marquee-item">Captain Included <span class="msep"></span></span>
+    <span class="marquee-item">Miami River <span class="msep"></span></span>
+    <span class="marquee-item">Key Biscayne <span class="msep"></span></span>
+    <span class="marquee-item">Miami Beach Marina <span class="msep"></span></span>
+    <span class="marquee-item">@iron_shark305 <span class="msep"></span></span>
+    <span class="marquee-item">Jet Ski Rentals <span class="msep"></span></span>
+    <span class="marquee-item">Yacht Charters <span class="msep"></span></span>
+    <span class="marquee-item">ATV &amp; UTV Adventures <span class="msep"></span></span>
+    <span class="marquee-item">Captain Included <span class="msep"></span></span>
+    <span class="marquee-item">Miami River <span class="msep"></span></span>
+    <span class="marquee-item">Key Biscayne <span class="msep"></span></span>
+    <span class="marquee-item">Miami Beach Marina <span class="msep"></span></span>
+    <span class="marquee-item">@iron_shark305 <span class="msep"></span></span>
+  </div>
+</div>
+
+<!-- ── CATEGORIES ── -->
+<section id="categories">
+  <div class="section-header reveal">
+    <div class="eyebrow">What We Offer</div>
+    <h2>Pick your<br>adventure</h2>
+    <p>From 30-minute jet ski thrills to full-day luxury yacht charters — every experience on the water.</p>
+  </div>
+  <div class="cat-grid reveal">
+    <div class="cat-card">
+      <div class="cat-num">01</div>
+      <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 18c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M6 8.5c1-1.5 2.5-2 4-1.5l6 2.5c1.5.5 3 .5 4-.5"/></svg></div>
+      <h3>Jet Ski</h3>
+      <p>High-speed personal watercraft for 2 guests. Available all week. Must be 18+.</p>
+      <div class="cat-from">From <strong>$80</strong> / 30 min</div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-num">02</div>
+      <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="2.5"/><circle cx="18" cy="17" r="2.5"/><path d="M6 14.5V9.5l3-4h6l3 4v5H6z"/><path d="M9 14.5V8.5"/><path d="M1 12h2M21 12h2"/></svg></div>
+      <h3>ATV / UTV</h3>
+      <p>Off-road adrenaline for up to 4 guests. ATV or UTV units available daily.</p>
+      <div class="cat-from">From <strong>$120</strong> / hour</div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-num">03</div>
+      <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V9l7-6 7 6v11"/><path d="M5 15h14"/><path d="M12 3v12"/></svg></div>
+      <h3>Day Boats</h3>
+      <p>26'–42' boats perfect for groups up to 13. Captain, fuel &amp; water toys included.</p>
+      <div class="cat-from">From <strong>$350</strong> / 2 hrs</div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-num">04</div>
+      <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 19h20"/><path d="M2 19l3-8h14l3 8"/><path d="M8 11V7h8v4"/><path d="M12 7V4"/><path d="M5 15h14"/></svg></div>
+      <h3>Luxury Yachts</h3>
+      <p>44'–68' yachts with premium amenities, sound systems &amp; full crew service.</p>
+      <div class="cat-from">From <strong>$750</strong> / 4 hrs</div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-num">05</div>
+      <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M3 21l2-8h14l2 8"/><rect x="8" y="5" width="8" height="8" rx="1"/><path d="M12 5V2"/><path d="M8 9H4l1 4"/><path d="M16 9h4l-1 4"/><path d="M8 13h8"/></svg></div>
+      <h3>Mega Yachts</h3>
+      <p>70'–120' superyachts — jacuzzis, staterooms, full crew &amp; water toys included.</p>
+      <div class="cat-from">From <strong>$3,750</strong> / 4 hrs</div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-num">06</div>
+      <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01M22 8h.01M15 2h.01M22 20h.01"/><path d="M22 2 11 13"/><path d="m13 11 1.5 4 4-1.5"/></svg></div>
+      <h3>Party Boats</h3>
+      <p>72' Champagne Showers for up to 45 guests. Perfect for events &amp; celebrations.</p>
+      <div class="cat-from">From <strong>$100</strong> / person</div>
+      <div class="cat-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FLEET ── -->
+<section id="fleet">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-header reveal">
+      <div class="eyebrow">The Fleet</div>
+      <h2>Browse &amp; Book<br>Instantly</h2>
+      <p>Select any vessel, choose your duration, and pay securely via Stripe — your captain confirms within minutes.</p>
+    </div>
+
+    <div class="fleet-filters reveal">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="watersports">Water Sports</button>
+      <button class="filter-btn" data-filter="offroad">Off-Road</button>
+      <button class="filter-btn" data-filter="dayboat">Day Boats</button>
+      <button class="filter-btn" data-filter="yacht">Yachts 44'–68'</button>
+      <button class="filter-btn" data-filter="mega">Big Yachts 70'+</button>
+    </div>
+
+    <div class="fleet-grid" id="fleetGrid"></div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-header reveal">
+      <div class="eyebrow">How It Works</div>
+      <h2>From browse to<br>boarding in minutes</h2>
+    </div>
+    <div class="steps-wrap reveal">
+      <div class="steps-connector"></div>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-circle">01</div>
+          <h3>Pick Your Vessel</h3>
+          <p>Browse the full fleet and choose the boat that fits your group size and budget.</p>
+        </div>
+        <div class="step">
+          <div class="step-circle">02</div>
+          <h3>Choose Date &amp; Duration</h3>
+          <p>Select your preferred date and how many hours you want on the water.</p>
+        </div>
+        <div class="step">
+          <div class="step-circle">03</div>
+          <h3>Pay Securely</h3>
+          <p>Complete your booking via Stripe — your payment is encrypted and protected.</p>
+        </div>
+        <div class="step">
+          <div class="step-circle">04</div>
+          <h3>Hit the Water</h3>
+          <p>Show up at the marina. Your captain, fuel, ice &amp; water toys are all ready.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PERKS ── -->
+<section id="perks">
+  <div class="section-header reveal">
+    <div class="eyebrow">Always Included</div>
+    <h2>No hidden fees.<br>No surprises.</h2>
+  </div>
+  <div class="perks-grid reveal">
+    <div class="perk">
+      <div class="perk-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M12 8v13"/><path d="M5 15a7 7 0 0 0 14 0"/><path d="M5 15H2M22 15h-3"/></svg></div>
+      <h4>Professional Captain</h4>
+      <p>Every charter comes with a licensed, experienced captain on board.</p>
+    </div>
+    <div class="perk">
+      <div class="perk-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14"/><path d="M3 22h12"/><path d="M7 14h4"/><path d="M15 10h2a2 2 0 0 1 2 2v3a1 1 0 0 0 2 0V9l-3-3"/><path d="M19 6V4"/></svg></div>
+      <h4>Fuel Included</h4>
+      <p>Full tank on departure. No fuel surcharges or hidden add-ons.</p>
+    </div>
+    <div class="perk">
+      <div class="perk-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93 4.93 19.07"/></svg></div>
+      <h4>Ice &amp; Water</h4>
+      <p>Cooler stocked with ice and water. Ready for your beverages.</p>
+    </div>
+    <div class="perk">
+      <div class="perk-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 18c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><circle cx="12" cy="8" r="3"/><path d="M12 5V2"/></svg></div>
+      <h4>Water Toys</h4>
+      <p>Most vessels include tubes, snorkel gear, floating mats, and more.</p>
+    </div>
+    <div class="perk">
+      <div class="perk-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 7-8 13-8 13S4 17 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <h4>Multiple Marinas</h4>
+      <p>Miami River, Miami Beach Marina, Venetian, Bayside, Key Biscayne &amp; more.</p>
+    </div>
+    <div class="perk">
+      <div class="perk-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <h4>Secure Booking</h4>
+      <p>Book directly online with Stripe — instant confirmation, no middleman.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BAND ── -->
+<div class="cta-band reveal">
+  <h2>Ready for the <em>experience</em>?</h2>
+  <p>Available 7 days a week. Groups of all sizes welcome. Miami's most complete water sport company.</p>
+  <a href="#fleet" class="btn-gold">Book a Vessel Now</a>
+</div>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="reveal">
+      <div class="eyebrow" style="margin-bottom:1.25rem;">Get in Touch</div>
+      <div class="c-big">Questions?<br>We're <em>here</em><br>for you.</div>
+      <p class="c-sub">Message us on Instagram or send a note below. We respond fast — usually within the hour.</p>
+      <div class="c-item"><div class="c-dot-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></div> @iron_shark305 on Instagram</div>
+      <div class="c-item"><div class="c-dot-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 7-8 13-8 13S4 17 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></div> Miami, Florida</div>
+      <div class="c-item"><div class="c-dot-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div> Open 7 days a week</div>
+    </div>
+    <div class="c-form reveal rd1">
+      <label class="c-label">Your Name</label>
+      <input class="c-input" type="text" placeholder="John Smith" />
+      <label class="c-label">Phone / WhatsApp</label>
+      <input class="c-input" type="tel" placeholder="+1 (305) 000-0000" />
+      <label class="c-label">What are you interested in?</label>
+      <select class="c-select">
+        <option value="">Select...</option>
+        <option>Jet Ski Rental</option>
+        <option>ATV / UTV</option>
+        <option>Day Boat Charter</option>
+        <option>Luxury Yacht Charter</option>
+        <option>Mega Yacht Charter</option>
+        <option>Party / Group Event</option>
+      </select>
+      <label class="c-label">Message</label>
+      <textarea class="c-textarea" placeholder="Tell us your preferred date, group size, and any questions..."></textarea>
+      <button class="c-btn">Send Message</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">IRON <span>SHARK</span> · Water Sport</div>
+    <ul class="footer-links">
+      <li><a href="#fleet">Fleet</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="https://www.instagram.com/iron_shark305" target="_blank" rel="noopener">Instagram</a></li>
+    </ul>
+    <div class="footer-right">
+      <div class="footer-copy">© 2026 Iron Shark Rentals. Miami, FL.</div>
+      <div class="footer-webbsite">Website by <a href="https://webbsite.co" target="_blank" rel="noopener">WEBBSITE</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+// TODO: Replace with your actual Stripe publishable key from dashboard.stripe.com
+const STRIPE_PK       = 'pk_test_YOUR_STRIPE_PUBLISHABLE_KEY';
+const CHECKOUT_ENDPOINT = '/api/create-checkout-session';
+const stripe = Stripe(STRIPE_PK);
+
+// ── FLEET DATA ───────────────────────────────────────────────────────────────
+const fleet = [
+  // WATER SPORTS
+  { id:'jetski', name:'Jet Ski', category:'watersports', tag:'Adrenaline', guests:2, location:'Miami, FL', icon:'🏄', img:'images/boats/page-02.jpg',
+    rates:[{label:'30 mins',price:80},{label:'1 hour',price:150}],
+    includes:['Available all week','Must be 18+'] },
+  { id:'atv', name:'ATV', category:'offroad', tag:'Off-Road', guests:4, location:'Miami, FL', icon:'🚙', img:'images/boats/page-03.jpg',
+    rates:[{label:'1 hour',price:120}],
+    includes:['Available all week','Must be 18+'] },
+  { id:'utv', name:'UTV', category:'offroad', tag:'Off-Road', guests:4, location:'Miami, FL', icon:'🚙', img:'images/boats/page-03.jpg',
+    rates:[{label:'1 hour',price:250}],
+    includes:['Available all week','Must be 18+'] },
+  // DAY BOATS
+  { id:'searay26-sundeck', name:"26' Sea Ray Sundeck", category:'dayboat', tag:'Day Boat', guests:11, location:'River Landing', icon:'⛵', img:'images/boats/page-04.jpg',
+    rates:[{label:'2 hrs',price:350},{label:'3 hrs',price:475},{label:'4 hrs',price:600},{label:'5 hrs',price:750},{label:'6 hrs',price:900},{label:'7 hrs',price:1025},{label:'8 hrs',price:1200}],
+    includes:['Captain · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'searay26-mareblu', name:"26' Sea Ray Mareblu II", category:'dayboat', tag:'Day Boat', guests:12, location:'River Landing', icon:'⛵', img:'images/boats/page-05.jpg',
+    rates:[{label:'2 hrs',price:480},{label:'3 hrs',price:600},{label:'4 hrs',price:730},{label:'5 hrs',price:875},{label:'6 hrs',price:1020},{label:'7 hrs',price:1125},{label:'8 hrs',price:1300}],
+    includes:['Captain · Fuel · Ice & Water · Water Toys'] },
+  { id:'mastercraft-x26', name:'Mastercraft X26', category:'dayboat', tag:'Wake Boat', guests:13, location:'Rickenbacker Key Biscayne', icon:'🏊', img:'images/boats/page-06.jpg',
+    rates:[{label:'2 hrs',price:500},{label:'3 hrs',price:650},{label:'4 hrs',price:800},{label:'5 hrs',price:975},{label:'6 hrs',price:1100},{label:'7 hrs',price:1300},{label:'8 hrs',price:1525}],
+    includes:['Captain · Fuel · Ice & Water · Water Toys'] },
+  { id:'monterrey37', name:"37' Monterrey II", category:'dayboat', tag:'Day Boat', guests:13, location:'2215 NW 14th St', icon:'⛵', img:'images/boats/page-10.jpg',
+    rates:[{label:'2 hrs',price:575},{label:'3 hrs',price:725},{label:'4 hrs',price:875},{label:'5 hrs',price:1075},{label:'6 hrs',price:1250}],
+    includes:['Captain · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'sundancer42-barbie', name:"42' Sundancer Barbie", category:'dayboat', tag:'Day Boat', guests:13, location:'Miami, FL', icon:'⛵', img:'images/boats/page-18.jpg',
+    rates:[{label:'4 hrs',price:750},{label:'6 hrs',price:1050},{label:'8 hrs',price:1300}],
+    includes:['Captain · Fuel · Ice & Water · Cooler · Water Toys'] },
+  // YACHTS 44–68
+  { id:'sundancer44', name:"44' Sea Ray Sundancer", category:'yacht', tag:'Luxury', guests:13, location:'961 NW 7th St', icon:'🛥️', img:'images/boats/page-19.jpg',
+    rates:[{label:'4 hrs',price:1000},{label:'6 hrs',price:1450},{label:'8 hrs',price:2000}],
+    includes:['Captain · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'azimut40', name:"Azimut 40'", category:'yacht', tag:'Luxury', guests:13, location:'Venetian Marine', icon:'🛥️', img:'images/boats/page-15.jpg',
+    rates:[{label:'4 hrs',price:1200},{label:'6 hrs',price:1800},{label:'8 hrs',price:2450}],
+    includes:['Captain · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'fjord40', name:"40' Fjord", category:'yacht', tag:'Luxury', guests:13, location:'2060 NW 13th St', icon:'🛥️', img:'images/boats/page-14.jpg',
+    rates:[{label:'4 hrs',price:1350},{label:'6 hrs',price:1850},{label:'8 hrs',price:2400}],
+    includes:['Captain & Stew · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'azimut52-2020', name:"52' Azimut 2020", category:'yacht', tag:'Luxury', guests:13, location:'1800 NW 24th Ave', icon:'🛥️', img:'images/boats/page-34.jpg',
+    rates:[{label:'4 hrs',price:1850},{label:'6 hrs',price:2750},{label:'8 hrs',price:3650}],
+    includes:['Captain · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'azimut53', name:"53' Azimut", category:'yacht', tag:'Luxury', guests:13, location:'2215 NW 14th St', icon:'🛥️', img:'images/boats/page-36.jpg',
+    rates:[{label:'4 hrs',price:1650},{label:'5 hrs',price:1900},{label:'6 hrs',price:2150},{label:'8 hrs',price:2700}],
+    includes:['Captain & Stew · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'searay52-sundancer', name:"52' Sea Ray Sundancer", category:'yacht', tag:'Luxury', guests:13, location:'Brisas del Rio Marina', icon:'🛥️', img:'images/boats/page-35.jpg',
+    rates:[{label:'4 hrs',price:1450},{label:'6 hrs',price:2050},{label:'8 hrs',price:2500}],
+    includes:['Captain & Stew · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'axopar38', name:"Axopar 38' 2025", category:'yacht', tag:'New 2025', guests:13, location:'Bill Bird Marina', icon:'🛥️', img:'images/boats/page-13.jpg',
+    rates:[{label:'4 hrs',price:1525},{label:'6 hrs',price:2200},{label:'8 hrs',price:3350}],
+    includes:['1 bed · 1 bath · Captain · Fuel · Cooler · Sound System · Water Toys'] },
+  { id:'galeon53-fly', name:"53' Galeon Fly", category:'yacht', tag:'Premium', guests:13, location:'River Landing', icon:'🛥️', img:'images/boats/page-37.jpg',
+    rates:[{label:'4 hrs',price:2550},{label:'6 hrs',price:3750},{label:'8 hrs',price:4700}],
+    includes:['Captain & Stew · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'sunseeker60-predator', name:"60' Sunseeker Predator", category:'yacht', tag:'Premium', guests:13, location:'2215 NW 14th St', icon:'🛥️', img:'images/boats/page-41.jpg',
+    rates:[{label:'4 hrs',price:2200},{label:'6 hrs',price:3025}],
+    includes:['Captain & Mate · Fuel · Ice & Water · Cooler · Water Toys'] },
+  { id:'azimut68', name:"68' Azimut", category:'yacht', tag:'Ultra Luxury', guests:13, location:'Brisas del Rio', icon:'🛥️', img:'images/boats/page-49.jpg',
+    rates:[{label:'4 hrs',price:3000},{label:'6 hrs',price:4325},{label:'8 hrs',price:6000}],
+    includes:['Captain & Stew · Fuel · Ice & Water · Cooler · Water Toys'] },
+  // MEGA YACHTS
+  { id:'azimut64-2010', name:"Azimut 64' 2010", category:'mega', tag:'Mega Yacht', guests:13, location:'Harbor West Marina', icon:'🚢', img:'images/boats/page-47.jpg',
+    rates:[{label:'4 hrs',price:2400},{label:'6 hrs',price:3325},{label:'8 hrs',price:4600}],
+    includes:['3 beds · 3 baths · Captain + Stew · Fuel · Sound System · Water Toys'] },
+  { id:'galeon68-2022', name:"68' Galeon 2022", category:'mega', tag:'Mega Yacht', guests:13, location:'Marina Palms', icon:'🚢', img:'images/boats/page-53.jpg',
+    rates:[{label:'4 hrs',price:4000},{label:'6 hrs',price:5525},{label:'8 hrs',price:7700}],
+    includes:['4 beds · 3 baths · 8 sleeps · Captain + Stew · Fuel · Sound System · Water Toys'] },
+  { id:'galeon68-2025', name:"Galeon 68' 2025", category:'mega', tag:'New 2025', guests:13, location:'Miami Beach Marina', icon:'🚢', img:'images/boats/page-55.jpg',
+    rates:[{label:'4 hrs',price:4700},{label:'6 hrs',price:6325},{label:'8 hrs',price:8200}],
+    includes:['4 beds · 3 baths · 8 sleeps · Captain + Stew · Fuel · Sound System · Water Toys'] },
+  { id:'azimut72-2019', name:"Azimut 72' 2019", category:'mega', tag:'Mega Yacht', guests:13, location:'North Bay Village', icon:'🚢', img:'images/boats/page-57.jpg',
+    rates:[{label:'4 hrs',price:4550},{label:'6 hrs',price:6400},{label:'8 hrs',price:8800}],
+    includes:['4 beds · 3 baths · 8 sleeps · Captain + Stew · Fuel · Sound System · Paddle Boards'] },
+  { id:'azimut75-2016', name:"75' Azimut 2016", category:'mega', tag:'Mega Yacht', guests:13, location:'Bayside Marina', icon:'🚢', img:'images/boats/page-59.jpg',
+    rates:[{label:'4 hrs',price:3750},{label:'6 hrs',price:4500},{label:'8 hrs',price:6000}],
+    includes:['4 beds · 4 baths · 8 sleeps · Captain + Stew · Fuel · Sound System · Water Toys'] },
+  { id:'sunseeker80-2019', name:"80' Sunseeker 2019", category:'mega', tag:'Mega Yacht', guests:13, location:'Miami Beach Marina', icon:'🚢', img:'images/boats/page-61.jpg',
+    rates:[{label:'4 hrs',price:5025},{label:'6 hrs',price:6700},{label:'8 hrs',price:8850}],
+    includes:['4 beds · 3 baths · 8 sleeps · Captain + Stew · Fuel · Sound System · Water Toys'] },
+  { id:'sunseeker90-2014', name:"90' Sunseeker 2014", category:'mega', tag:'Superyacht', guests:13, location:'Williams Island', icon:'🚢', img:'images/boats/page-68.jpg',
+    rates:[{label:'4 hrs',price:5600},{label:'6 hrs',price:7500},{label:'8 hrs',price:9500}],
+    includes:['4 beds · 4 baths · 8 sleeps · Captain + Stew · Fuel · 2 Jetskis · Wakeboard · Paddle Boards'] },
+  { id:'champagne72', name:"72' Champagne Showers", category:'mega', tag:'Party Boat', guests:45, location:'Bayside', icon:'🎉', img:'images/boats/page-56.jpg',
+    rates:[{label:'3 hrs (30+ ppl)',price:100,perPerson:true},{label:'4 hrs (30+ ppl)',price:125,perPerson:true}],
+    includes:['Captain & Mate · Fuel · Ice & Water · Cooler · Min 30 people'] },
+  { id:'azimut120', name:"120' Azimut 2012", category:'mega', tag:'Superyacht', guests:13, location:'Miami Beach Marina', icon:'🚢', img:'images/boats/page-71.jpg',
+    rates:[{label:'4 hrs',price:10400},{label:'6 hrs',price:14000},{label:'8 hrs',price:17500}],
+    includes:['5 beds · 5 baths · 10 sleeps · Captain + 4 Crew · Fuel · Jetski · Jacuzzi · Water Slide · Smart TVs'] }
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let currentVessel = null;
+let selectedRate  = null;
+
+// ── WAVE SVG (boat placeholder art) ─────────────────────────────────────────
+const waveSVG = `<svg viewBox="0 0 300 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0,40 C40,20 80,55 120,40 C160,25 200,55 240,40 C265,30 285,45 300,38 L300,80 L0,80 Z" fill="rgba(201,165,42,.18)"/>
+  <path d="M0,55 C50,38 90,65 140,52 C190,40 230,65 280,54 L300,52 L300,80 L0,80 Z" fill="rgba(201,165,42,.1)"/>
+</svg>`;
+
+// ── RENDER FLEET ─────────────────────────────────────────────────────────────
+function renderFleet(filter) {
+  const grid  = document.getElementById('fleetGrid');
+  const boats = filter === 'all' ? fleet : fleet.filter(b => b.category === filter);
+  const premiumTags = ['New 2025','Superyacht','Premium','Ultra Luxury','Party Boat'];
+
+  grid.innerHTML = boats.map(b => {
+    const ratesPills = b.rates.slice(0,4).map(r =>
+      `<span class="rate-pill">${r.label} — $${r.price.toLocaleString()}${r.perPerson ? '/pp' : ''}</span>`
+    ).join('');
+    const isPremium  = premiumTags.includes(b.tag);
+    const tagClass   = isPremium ? 'premium' : '';
+    const startPrice = b.rates[0].price;
+
+    const imgInner = b.img
+      ? `<img src="${b.img}" alt="${b.name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;">`
+      : `<div class="boat-img-bg"></div><div class="boat-img-shimmer"></div><div class="boat-img-waves">${waveSVG}</div><div class="boat-img-icon">${b.icon}</div>`;
+
+    return `<div class="boat-card reveal" data-category="${b.category}">
+      <div class="boat-img-wrap">
+        ${imgInner}
+        <span class="boat-tag ${tagClass}">${b.tag}</span>
+        <div class="boat-price-badge">From $${startPrice.toLocaleString()}${b.rates[0].perPerson ? '/pp' : ''}</div>
+      </div>
+      <div class="boat-body">
+        <div class="boat-name">${b.name}</div>
+        <div class="boat-meta">
+          <span><svg style="width:13px;height:13px;vertical-align:middle;margin-right:3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>${b.guests} guests</span>
+          <span><svg style="width:13px;height:13px;vertical-align:middle;margin-right:3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 7-8 13-8 13S4 17 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>${b.location}</span>
+        </div>
+        <div class="boat-rates">
+          <div class="boat-rates-label">Rates</div>
+          <div class="boat-rates-list">${ratesPills}</div>
+        </div>
+        <div class="boat-includes">
+          <div class="boat-includes-label">Includes</div>
+          <div class="boat-includes-list">${b.includes.join(' · ')}</div>
+        </div>
+        <button class="book-btn" onclick="openModal('${b.id}')">Book Now</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('.reveal').forEach(el => {
+    if (!el.classList.contains('visible')) obs.observe(el);
+  });
+}
+
+// ── FILTER BUTTONS ───────────────────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderFleet(btn.dataset.filter);
+  });
+});
+
+// ── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(vesselId) {
+  const vessel = fleet.find(b => b.id === vesselId);
+  if (!vessel) return;
+  currentVessel = vessel;
+  selectedRate  = null;
+
+  document.getElementById('modalVesselName').textContent = vessel.name + ' — up to ' + vessel.guests + ' guests';
+  document.getElementById('modalPrice').textContent    = '$0';
+  document.getElementById('modalDurLabel').textContent = 'Select a duration';
+
+  const grid = document.getElementById('durationGrid');
+  grid.innerHTML = vessel.rates.map((r,i) =>
+    `<button class="dur-btn" data-idx="${i}" onclick="selectRate(${i})">${r.label}<span class="dur-price">$${r.price.toLocaleString()}${r.perPerson ? '/pp' : ''}</span></button>`
+  ).join('');
+
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('bookDate').min = today;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function selectRate(idx) {
+  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`.dur-btn[data-idx="${idx}"]`).classList.add('selected');
+  selectedRate = currentVessel.rates[idx];
+  document.getElementById('modalPrice').textContent    = '$' + selectedRate.price.toLocaleString() + (selectedRate.perPerson ? '/pp' : '');
+  document.getElementById('modalDurLabel').textContent = selectedRate.label;
+}
+
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+// ── CHECKOUT ─────────────────────────────────────────────────────────────────
+async function handleCheckout() {
+  if (!selectedRate) { alert('Please select a duration.'); return; }
+  const date   = document.getElementById('bookDate').value;
+  const guests = document.getElementById('bookGuests').value;
+  const name   = document.getElementById('bookName').value.trim();
+  const phone  = document.getElementById('bookPhone').value.trim();
+  const email  = document.getElementById('bookEmail').value.trim();
+
+  if (!date)  { alert('Please select a date.'); return; }
+  if (!name)  { alert('Please enter your name.'); return; }
+  if (!email) { alert('Please enter your email.'); return; }
+
+  const btn = document.getElementById('checkoutBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>Connecting to Stripe...</span>';
+
+  try {
+    const res = await fetch(CHECKOUT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        vessel:    currentVessel.name,
+        vesselId:  currentVessel.id,
+        duration:  selectedRate.label,
+        price:     selectedRate.price,
+        perPerson: !!selectedRate.perPerson,
+        date, guests, name, phone, email
+      })
+    });
+    if (!res.ok) throw new Error('Server error');
+    const { sessionId } = await res.json();
+    await stripe.redirectToCheckout({ sessionId });
+  } catch {
+    alert('⚠️ Stripe backend not configured yet.\n\nThis will redirect to Stripe Checkout once /api/create-checkout-session is set up.\n\nFor now, contact us via Instagram: @iron_shark305');
+    btn.disabled = false;
+    btn.innerHTML = '<span>Pay Securely with Stripe</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+  }
+}
+
+// ── MOBILE MENU ───────────────────────────────────────────────────────────────
+const burger     = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+function closeMobileMenu() {
+  burger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+  document.body.style.overflow = '';
+}
+burger.addEventListener('click', () => {
+  const isOpen = burger.classList.toggle('open');
+  mobileMenu.classList.toggle('open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+
+// ── NAV SCROLL ────────────────────────────────────────────────────────────────
+const mainNav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  mainNav.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+// ── CURSOR ────────────────────────────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+(function loop() {
+  rx += (mx-rx)*.1; ry += (my-ry)*.1;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(loop);
+})();
+document.addEventListener('mouseover', e => {
+  const over = e.target.closest('a, button');
+  cursor.style.width  = over ? '18px' : '10px';
+  cursor.style.height = over ? '18px' : '10px';
+  ring.style.width    = over ? '56px' : '38px';
+  ring.style.height   = over ? '56px' : '38px';
+  ring.style.borderColor = over ? 'rgba(201,165,42,.75)' : 'rgba(201,165,42,.38)';
+});
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderFleet('all');
+</script>
+</body>
+</html>

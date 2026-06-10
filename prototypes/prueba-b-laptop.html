@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRUEBA B — Aperture Portal Reveal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange: #E8720C;
+      --black: #0D0D0D;
+      --white: #FFFFFF;
+      --gray: #6B6B6B;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+    html.lenis { height: auto; }
+    html.lenis-smooth { scroll-behavior: auto !important; }
+    body { font-family: var(--font); background: var(--black); color: var(--white); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+    .proto-bar { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 9999;
+      display: flex; gap: 4px; background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+      padding: 5px; border-radius: 999px; box-shadow: 0 8px 30px rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.1); }
+    .proto-bar a { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-decoration: none;
+      color: rgba(255,255,255,0.6); padding: 7px 14px; border-radius: 999px; transition: all .3s ease; }
+    .proto-bar a.active { background: var(--orange); color: #fff; }
+    .proto-bar a:hover { color: #fff; }
+
+    section.hero-pin { position: relative; height: 280vh; }
+    .hero-stage { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; background: var(--black); }
+
+    /* full-screen image, revealed by a growing circular mask.
+       the image NEVER moves or scales — only the clip-path opens, so alignment is exact. */
+    .reveal { position: absolute; inset: 0; z-index: 1;
+      background: url('06-destination.jpeg') center/cover no-repeat;
+      clip-path: circle(13% at 50% 50%); will-change: clip-path; }
+
+    /* orange ring that blooms outward and fades as the aperture opens */
+    .ring { position: absolute; top: 50%; left: 50%; width: 300px; height: 300px; margin: -150px 0 0 -150px;
+      border-radius: 50%; border: 2px solid var(--orange); box-shadow: 0 0 70px rgba(232,114,12,0.4);
+      z-index: 2; will-change: opacity, transform; pointer-events: none; }
+
+    .top-meta { position: absolute; top: 15vh; left: 0; right: 0; text-align: center; z-index: 4; will-change: opacity, transform; }
+    .top-meta .eyebrow { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); font-weight: 700; margin-bottom: 14px; }
+    .top-meta h1 { font-size: clamp(40px, 6.5vw, 96px); font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; }
+    .top-meta h1 em { font-style: normal; color: var(--orange); }
+
+    .sub { position: absolute; bottom: 11vh; left: 0; right: 0; text-align: center; z-index: 4; will-change: opacity, transform; }
+    .sub p { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 22px; }
+    .cta-pill { background: var(--orange); color: #fff; text-decoration: none; font-weight: 600; font-size: 14px;
+      padding: 14px 28px; border-radius: 999px; }
+    .scroll-cue { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; margin-left: 18px; }
+
+    .after { background: var(--white); color: var(--black); padding: 140px 32px; text-align: center; }
+    .after h2 { font-size: clamp(36px, 5vw, 72px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.0; max-width: 900px; margin: 0 auto; }
+    .after h2 em { font-style: normal; color: var(--orange); }
+    .after p { color: var(--gray); margin-top: 26px; font-size: 16px; }
+
+    @media (max-width: 900px) {
+      section.hero-pin { height: 230vh; }
+      .top-meta { top: 11vh; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { clip-path: circle(150% at 50% 50%); }
+      .ring, .top-meta, .sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="proto-bar">
+    <a href="prueba-a-browser.html">A · Browser</a>
+    <a href="prueba-b-laptop.html" class="active">B · Aperture</a>
+    <a href="prueba-c-wordmark.html">C · Wordmark</a>
+  </nav>
+
+  <section class="hero-pin">
+    <div class="hero-stage">
+      <div class="reveal" aria-hidden="true"></div>
+      <div class="ring" aria-hidden="true"></div>
+
+      <div class="top-meta">
+        <div class="eyebrow">Web Design Studio</div>
+        <h1>Look <em>closer.</em></h1>
+      </div>
+
+      <div class="sub">
+        <p>Scroll — the window opens onto the finished work.</p>
+        <a class="cta-pill" href="#start">Start a project</a>
+        <a class="scroll-cue" href="#after">Scroll ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="after" id="after">
+    <h2>The window opens straight into the <em>finished site.</em></h2>
+    <p>Services, Process, Pricing and Contact would continue from here — untouched.</p>
+  </section>
+
+  <script>
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, smoothTouch: false });
+      gsap.registerPlugin(ScrollTrigger);
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+
+      gsap.timeline({ scrollTrigger: { trigger: '.hero-pin', start: 'top top', end: 'bottom bottom', scrub: 1 } })
+        // labels clear away
+        .to('.top-meta', { opacity: 0, y: -40, ease: 'power2.in' }, 0)
+        .to('.sub',      { opacity: 0, y: 40, ease: 'power1.in' }, 0)
+        // ring blooms outward and fades as the aperture begins to open
+        .to('.ring', { scale: 3, opacity: 0, ease: 'power2.in', duration: 0.4 }, 0)
+        // the circular aperture opens — image stays perfectly aligned, only unmasked
+        .fromTo('.reveal',
+          { clipPath: 'circle(13% at 50% 50%)' },
+          { clipPath: 'circle(90% at 50% 50%)', ease: 'power2.inOut', duration: 1 }, 0);
+    }
+  </script>
+</body>
+</html>
