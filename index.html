@@ -4,6 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WEBBSITE — We Build Websites That Hit Different</title>
+  <meta name="description" content="Custom websites for businesses serious about growing. Landing pages, booking systems, e-commerce — designed, built, and live in days, not months. You see the full design before you pay." />
+  <link rel="canonical" href="https://webbsite-ebon.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://webbsite-ebon.vercel.app/" />
+  <meta property="og:site_name" content="WEBBSITE" />
+  <meta property="og:title" content="WEBBSITE — Websites that make people stop scrolling" />
+  <meta property="og:description" content="Custom websites for businesses serious about growing. Live in days, not months. You see the full design before you pay." />
+  <meta property="og:image" content="https://webbsite-ebon.vercel.app/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="WEBBSITE — Websites that make people stop scrolling" />
+  <meta name="twitter:description" content="Custom websites for businesses serious about growing. Live in days, not months." />
+  <meta name="twitter:image" content="https://webbsite-ebon.vercel.app/images/og-image.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -81,6 +95,23 @@
     }
     @media (hover: hover) and (pointer: fine) { .nav-cta:hover { opacity: 0.78; } }
     .nav-cta:active { transform: scale(0.96); }
+
+    /* mobile burger + dropdown (hidden on desktop) */
+    .nav-burger {
+      display: none;
+      background: none; border: none; cursor: pointer;
+      width: 38px; height: 38px;
+      flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+      flex-shrink: 0;
+    }
+    .nav-burger span {
+      display: block; width: 18px; height: 2px;
+      background: var(--black); border-radius: 2px;
+      transition: transform 0.3s var(--ease-out);
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
+    .nav-menu { display: none; }
 
     /* ── HERO: asymmetric split ── */
     .hero {
@@ -440,6 +471,69 @@
       .feat-link:hover { gap: 0.9rem; }
     }
 
+    /* ── WORK / PORTFOLIO ── */
+    #work { background: var(--white); padding: 9rem 5rem; }
+    .work-showcase {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 4.5rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .work-frame {
+      display: block;
+      background: var(--white);
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 32px 64px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.05);
+      text-decoration: none;
+      transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .work-frame:hover { transform: translateY(-4px); box-shadow: 0 40px 80px rgba(0,0,0,0.14), 0 8px 20px rgba(0,0,0,0.05); }
+    }
+    .work-frame:active { transform: scale(0.99); }
+    .work-browser {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.6rem 1rem;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+    .work-dots { display: flex; gap: 5px; }
+    .work-dots span { width: 9px; height: 9px; border-radius: 50%; background: rgba(0,0,0,0.10); }
+    .work-url {
+      font-size: 0.7rem; font-weight: 500; color: var(--gray);
+      background: var(--gray-light); border: 1px solid var(--border);
+      border-radius: 100px; padding: 0.25rem 0.9rem;
+    }
+    .work-frame img { width: 100%; display: block; }
+    .work-title {
+      font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--black);
+      line-height: 1.05;
+      margin-bottom: 1rem;
+    }
+    .work-quote {
+      max-width: 680px;
+      margin: 6rem auto 0;
+      text-align: center;
+    }
+    .wq-mark { font-size: 3rem; font-weight: 800; color: var(--orange); line-height: 0.5; display: block; margin-bottom: 1.25rem; }
+    .wq-text {
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.5;
+      color: var(--black);
+      margin-bottom: 1.5rem;
+    }
+    .wq-author { font-size: 0.82rem; font-weight: 700; color: var(--gray); letter-spacing: 0.04em; text-transform: uppercase; }
+    .wq-author em { font-style: normal; color: var(--orange); }
+
     /* ── ZOOM-THROUGH (design C / prueba-c-wordmark) — reusable: Studio + Pricing ── */
     /* set the fill/reveal image per-instance: style="--zt-img:url('images/NAME.jpeg')" on .zt-pin */
     .zt-pin { position: relative; height: 260vh; background: var(--black); }
@@ -694,6 +788,53 @@
       .p-btn-border:hover { border-color: var(--orange); color: var(--orange); }
     }
 
+    /* ── FAQ ── */
+    #faq { background: var(--gray-light); padding: 9rem 5rem; border-top: 1px solid var(--border); }
+    .faq-list {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .faq-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.25s var(--ease-out);
+    }
+    .faq-item[open] { border-color: rgba(232,114,12,0.35); }
+    .faq-item summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.3rem 1.5rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      color: var(--black);
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-icon {
+      color: var(--orange);
+      font-weight: 800;
+      font-size: 1.15rem;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: transform 0.3s var(--ease-out);
+    }
+    .faq-item[open] .faq-icon { transform: rotate(45deg); }
+    .faq-item p {
+      padding: 0 1.5rem 1.4rem;
+      font-size: 0.88rem;
+      color: var(--gray);
+      line-height: 1.75;
+    }
+
     /* ── CONTACT ── */
     #contact { background: var(--black); padding: 9rem 5rem; }
 
@@ -811,6 +952,38 @@
         justify-content: space-between;
       }
       .nav-links { display: none; }
+      .nav-logo { margin-right: auto; }
+      .nav-cta { margin-right: 0.5rem; }
+      .nav-burger { display: flex; }
+      .nav-menu {
+        position: absolute;
+        top: calc(100% + 1px);
+        left: 0; right: 0;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 24px 48px rgba(0,0,0,0.08);
+        padding: 0.75rem 1.5rem 1.25rem;
+        flex-direction: column;
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+        display: flex;
+      }
+      .nav-menu.open {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      .nav-menu a {
+        color: var(--black);
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-menu a:last-child { border-bottom: none; }
       .hero {
         grid-template-columns: 1fr;
         padding: 6rem 1.5rem 4rem;
@@ -820,7 +993,9 @@
       .hero-sub, .hero-eyebrow { margin-left: auto; margin-right: auto; }
       .hero-btns { justify-content: center; }
       .hero-img-float { left: -1rem; bottom: -1rem; }
-      .chapter-problem, #services, .studio-plans, #process, #pricing-plans, #contact { padding: 6rem 1.5rem; }
+      .chapter-problem, #services, .studio-plans, #process, #pricing-plans, #contact, #work, #faq { padding: 6rem 1.5rem; }
+      .work-showcase { grid-template-columns: 1fr; gap: 2.5rem; }
+      .work-quote { margin-top: 4rem; }
       .stats-bar { padding: 4rem 1.5rem; }
       .problem-grid { grid-template-columns: 1fr; gap: 0.75rem; }
       .process-steps { grid-template-columns: 1fr 1fr; }
@@ -846,10 +1021,23 @@
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
       <li><a href="#process">Process</a></li>
+      <li><a href="#work">Work</a></li>
       <li><a href="#pricing">Pricing</a></li>
       <li><a href="#studio">Studio</a></li>
     </ul>
     <a href="#contact" class="nav-cta">Start a Project</a>
+    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <div class="nav-menu" id="nav-menu">
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#work">Work</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#studio">Studio</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Start a Project</a>
+    </div>
   </nav>
 
   <!-- HERO -->
@@ -1025,6 +1213,37 @@
           <p>We handle domain, hosting, and launch. You start getting customers from day one.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="section-header reveal">
+      <div class="ch-eyebrow" style="margin-bottom:1rem;">Selected Work</div>
+      <h2>Real sites.<br>Real businesses.</h2>
+      <p>Every project gets the same treatment: custom design, clean code, and a launch built to bring in customers.</p>
+    </div>
+
+    <div class="work-showcase reveal">
+      <a class="work-frame" href="https://pienezzayacht.com" target="_blank" rel="noopener">
+        <div class="work-browser">
+          <div class="work-dots"><span></span><span></span><span></span></div>
+          <div class="work-url">pienezzayacht.com</div>
+        </div>
+        <img src="images/work-pienezza.jpeg" alt="Pienezza Yacht website — bareboat charter in Miami" />
+      </a>
+      <div>
+        <div class="feat-num">01 — Pienezza Yacht</div>
+        <h3 class="work-title">Private yacht charter,<br>Miami</h3>
+        <p class="feat-desc">A booking-ready charter site for a private yacht sailing out of the Miami River. Bilingual, mobile-first, with routes, pricing, and reservations — designed to turn visitors into charters.</p>
+        <a href="https://pienezzayacht.com" target="_blank" rel="noopener" class="feat-link">Visit live site &rarr;</a>
+      </div>
+    </div>
+
+    <div class="work-quote reveal">
+      <span class="wq-mark">&ldquo;</span>
+      <p class="wq-text">We had nothing online. Now clients see the yacht, check the routes, and book — the website does the selling for us.</p>
+      <div class="wq-author">Pienezza Yacht <em>&middot;</em> Miami, FL</div>
     </div>
   </section>
 
@@ -1257,6 +1476,41 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="section-header reveal">
+      <div class="ch-eyebrow" style="margin-bottom:1rem;">FAQ</div>
+      <h2>Questions?<br>Answered.</h2>
+      <p>The things every business owner asks us before starting.</p>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item stagger" style="--i:0">
+        <summary>How fast will my website be ready? <span class="faq-icon">+</span></summary>
+        <p>Starter landing pages go live in 5 days. Most full websites take 7 days. Larger projects with e-commerce or custom integrations take around 14. We give you an exact date before we start — and we hit it.</p>
+      </details>
+      <details class="faq-item stagger" style="--i:1">
+        <summary>What if I don't like the design? <span class="faq-icon">+</span></summary>
+        <p>You see the complete design before you pay anything. If you don't love it, you don't pay — that's how confident we are. Once you approve it, revisions are included until it's exactly right.</p>
+      </details>
+      <details class="faq-item stagger" style="--i:2">
+        <summary>What do I need to provide? <span class="faq-icon">+</span></summary>
+        <p>Just your logo, any photos you have, and a quick conversation about your business. We handle everything else — the copy, the design, the code, and the launch.</p>
+      </details>
+      <details class="faq-item stagger" style="--i:3">
+        <summary>Do you handle the domain and hosting? <span class="faq-icon">+</span></summary>
+        <p>Yes. We set up your domain, hosting, and SSL certificate so your site is fast and secure from day one. You own everything — the domain and the site are yours.</p>
+      </details>
+      <details class="faq-item stagger" style="--i:4">
+        <summary>Are there contracts on the monthly plans? <span class="faq-icon">+</span></summary>
+        <p>No contracts. Every monthly plan is cancel-anytime. We'd rather keep you with results than with paperwork.</p>
+      </details>
+      <details class="faq-item stagger" style="--i:5">
+        <summary>Can you redesign my existing website? <span class="faq-icon">+</span></summary>
+        <p>Absolutely. We keep what works, rebuild what doesn't, and migrate everything over with zero downtime. Your old site stays live until the new one replaces it.</p>
+      </details>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section id="contact">
     <div class="contact-wrap">
@@ -1345,6 +1599,23 @@
           .to(pin.querySelector('.zt-mark'), { opacity: 0, duration: 0.3, ease: 'power2.out' }, 0.72);
       });
     }
+
+    // Mobile nav burger
+    const burger = document.getElementById('nav-burger');
+    const navMenu = document.getElementById('nav-menu');
+    burger.addEventListener('click', () => {
+      const open = navMenu.classList.toggle('open');
+      burger.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open);
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    navMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+        burger.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
 
     function switchPricing(btn, type) {
       document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
